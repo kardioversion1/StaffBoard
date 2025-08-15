@@ -1,4 +1,4 @@
-import { $, $$ } from './utils.js';
+import { $, $$, debug } from './utils.js';
 import { DB, KS } from './db.js';
 import { STATE } from './state.js';
 import { renderAll } from './render.js';
@@ -9,6 +9,7 @@ function setTheme(theme) {
   document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
   const btn = $('#themeToggle');
   if (btn) btn.textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode';
+  debug('Theme set to ' + theme);
 }
 
 function setAccent(name) {
@@ -25,10 +26,11 @@ function setAccent(name) {
   );
   const sel = $('#accentSel');
   if (sel) sel.value = name;
+  debug('Accent set to ' + name);
 }
 
 function formatDateLabel(iso) {
-  const d = new Date(iso + 'T12:00:00');
+  const d = new Date(iso + 'T12:00:00'); // force midday to avoid TZ roll
   return d.toLocaleDateString(undefined, {
     weekday: 'long',
     month: 'short',
@@ -60,7 +62,8 @@ async function wireControls() {
       STATE.date = e.target.value;
       const label = $('#dateLabel');
       if (label) label.textContent = formatDateLabel(STATE.date);
-      await renderAll();
+      debug('Date changed to ' + STATE.date);
+      await renderAll().catch(err => debug('Render error: ' + err.message));
     });
   }
 
@@ -72,7 +75,8 @@ async function wireControls() {
     if (picker) picker.value = STATE.date;
     const label = $('#dateLabel');
     if (label) label.textContent = formatDateLabel(STATE.date);
-    await renderAll();
+    debug('Prev day to ' + STATE.date);
+    await renderAll().catch(err => debug('Render error: ' + err.message));
   });
 
   const next = $('#nextDay');
@@ -83,7 +87,8 @@ async function wireControls() {
     if (picker) picker.value = STATE.date;
     const label = $('#dateLabel');
     if (label) label.textContent = formatDateLabel(STATE.date);
-    await renderAll();
+    debug('Next day to ' + STATE.date);
+    await renderAll().catch(err => debug('Render error: ' + err.message));
   });
 
   // Theme toggle
@@ -91,39 +96,49 @@ async function wireControls() {
   if (toggle) {
     toggle.addEventListener('click', () => {
       setTheme(STATE.theme === 'light' ? 'dark' : 'light');
-      DB.set(KS.CONFIG, { theme: STATE.theme, accent: STATE.accent }).catch(() => {});
+      DB.set(KS.CONFIG, { theme: STATE.theme, accent: STATE.accent })
+        .catch(e => debug('Config save error: ' + e.message));
     });
   }
 
-  // Accent selector
+  // Accent selector (settings tab)
   const accentSel = $('#accentSel');
   if (accentSel) {
     accentSel.addEventListener('change', e => {
       setAccent(e.target.value);
-      DB.set(KS.CONFIG, { theme: STATE.theme, accent: STATE.accent }).catch(() => {});
+      DB.set(KS.CONFIG, { theme: STATE.theme, accent: STATE.accent })
+        .catch(e => debug('Config save error: ' + e.message));
     });
   }
 
   // Print
   const printBtn = $('#printBtn');
-  if (printBtn) printBtn.addEventListener('click', () => window.print());
+  if (printBtn) {
+    printBtn.addEventListener('click', () => window.print());
+  }
+
+  debug('Controls wired');
 }
 
-// -------- Clock
+// -------- Clock (optional small helper)
 function startClock() {
   function tick() {
     const now = new Date();
     const s = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const tw = $('#timeWeather');
-    if (tw) tw.textContent = s;
+    if (tw) tw.textContent = s; // room for weather later
   }
   tick();
   setInterval(tick, 60_000);
+  debug('Clock started');
 }
 
 // -------- Init
 async function init() {
-  const cfg = await DB.get(KS.CONFIG).catch(() => null);
+  const cfg = await DB.get(KS.CONFIG).catch(e => {
+    debug('Config load error: ' + e.message);
+    return null;
+  });
   setTheme(cfg?.theme || STATE.theme || 'dark');
   setAccent(cfg?.accent || STATE.accent || 'blue');
 
@@ -134,7 +149,9 @@ async function init() {
 
   await wireControls();
   startClock();
-  await renderAll();
+
+  await renderAll().catch(e => debug('Render error: ' + e.message));
+  debug('Init complete');
 }
 
 window.addEventListener('DOMContentLoaded', init);
