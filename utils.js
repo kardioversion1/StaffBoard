@@ -15,3 +15,12 @@ export function nurseTile(n){
   if(!n) return '<div class="name">—</div>';
   return `<div class="tile"><div class="name">${n.name}</div><div class="rf">${n.rf?('RF '+n.rf):''}</div></div>`;
 }
+
+export function debug(msg){
+  const el=document.querySelector('#debugLog');
+  if(!el) return;
+  const div=document.createElement('div');
+  div.textContent=msg;
+  el.appendChild(div);
+  el.scrollTop=el.scrollHeight;
+}
