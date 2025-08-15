@@ -1,0 +1,846 @@
+{
+  "active:2025-08-13:day": {
+    "date": "2025-08-13",
+    "shift": "day",
+    "charge": {},
+    "triage": {},
+    "zones": {
+      "Beds 1–3": [],
+      "Beds 4-7": [],
+      "Beds 8, 9, 13, 14": [],
+      "Beds 17-20": [],
+      "Beds 21-24": [],
+      "Fast Track": [],
+      "Float": []
+    },
+    "incoming": [],
+    "offgoing": [],
+    "support": {
+      "techs": [],
+      "vols": [],
+      "sitters": []
+    },
+    "comments": ""
+  },
+  "active:2025-08-14:day": {
+    "date": "2025-08-14",
+    "shift": "day",
+    "charge": {},
+    "triage": {},
+    "zones": {
+      "Beds 1–3": [],
+      "Beds 4-7": [],
+      "Beds 8, 9, 13, 14": [],
+      "Beds 17-20": [],
+      "Beds 21-24": [],
+      "Fast Track": [],
+      "Float": []
+    },
+    "incoming": [],
+    "offgoing": [],
+    "support": {
+      "techs": [],
+      "vols": [],
+      "sitters": []
+    },
+    "comments": ""
+  },
+  "active:2025-08-14:night": {
+    "date": "2025-08-14",
+    "shift": "night",
+    "charge": {},
+    "triage": {},
+    "zones": {
+      "Beds 1–3": [],
+      "Beds 4-7": [],
+      "Beds 8, 9, 13, 14": [],
+      "Beds 17-20": [],
+      "Beds 21-24": [],
+      "Fast Track": [],
+      "Float": []
+    },
+    "incoming": [],
+    "offgoing": [],
+    "support": {
+      "techs": [],
+      "vols": [],
+      "sitters": []
+    },
+    "comments": ""
+  },
+  "active:2025-08-15:day": {
+    "date": "2025-08-15",
+    "shift": "night",
+    "charge": {
+      "nurseId": "594885",
+      "status": [],
+      "students": []
+    },
+    "triage": {
+      "nurseId": "400313",
+      "status": [],
+      "students": []
+    },
+    "zones": {
+      "Beds 1–3": [
+        {
+          "nurseId": "715964",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Beds 4-7": [
+        {
+          "nurseId": "378859",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Beds 8, 9, 13, 14": [
+        {
+          "nurseId": "660402",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Beds 17-20": [
+        {
+          "nurseId": "462499",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Beds 21-24": [
+        {
+          "nurseId": "741439",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Fast Track": [
+        {
+          "nurseId": "742425",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Float": [
+        {
+          "nurseId": "606407",
+          "status": [],
+          "students": []
+        }
+      ]
+    },
+    "incoming": [],
+    "comments": "Current Status: Red",
+    "activatedAt": "2025-08-15T04:53:45.836Z",
+    "offgoing": [
+      {
+        "nurseId": "594885",
+        "until": "19:40"
+      },
+      {
+        "nurseId": "378859",
+        "until": "19:40"
+      },
+      {
+        "nurseId": "731020",
+        "until": "19:40"
+      },
+      {
+        "nurseId": "462499",
+        "until": "19:40"
+      },
+      {
+        "nurseId": "783773",
+        "until": "19:40"
+      },
+      {
+        "nurseId": "518014",
+        "until": "19:40"
+      },
+      {
+        "nurseId": "483366",
+        "until": "19:40"
+      }
+    ]
+  },
+  "active:2025-08-15:night": {
+    "date": "2025-08-15",
+    "shift": "night",
+    "charge": {},
+    "triage": {},
+    "zones": {
+      "Beds 1–3": [],
+      "Beds 4-7": [],
+      "Beds 8, 9, 13, 14": [],
+      "Beds 17-20": [],
+      "Beds 21-24": [],
+      "Fast Track": [],
+      "Float": []
+    },
+    "incoming": [],
+    "offgoing": [],
+    "support": {
+      "techs": [],
+      "vols": [],
+      "sitters": []
+    },
+    "comments": ""
+  },
+  "active:2025-08-16:day": {
+    "date": "2025-08-16",
+    "shift": "day",
+    "charge": {},
+    "triage": {},
+    "zones": {
+      "Beds 1–3": [],
+      "Beds 4-7": [],
+      "Beds 8, 9, 13, 14": [],
+      "Beds 17-20": [],
+      "Beds 21-24": [],
+      "Fast Track": [],
+      "Float": []
+    },
+    "incoming": [],
+    "offgoing": [],
+    "support": {
+      "techs": [],
+      "vols": [],
+      "sitters": []
+    },
+    "comments": ""
+  },
+  "active:2025-08-16:night": {
+    "date": "2025-08-16",
+    "shift": "night",
+    "charge": {},
+    "triage": {},
+    "zones": {
+      "Beds 1–3": [],
+      "Beds 4-7": [],
+      "Beds 8, 9, 13, 14": [],
+      "Beds 17-20": [],
+      "Beds 21-24": [],
+      "Fast Track": [],
+      "Float": []
+    },
+    "incoming": [],
+    "offgoing": [],
+    "support": {
+      "techs": [],
+      "vols": [],
+      "sitters": []
+    },
+    "comments": ""
+  },
+  "archives": [
+    {
+      "date": "2025-08-15",
+      "shift": "day",
+      "charge": {},
+      "triage": {},
+      "zones": {
+        "Beds 1–5": [],
+        "Beds 6–10": [],
+        "Fast Track": [],
+        "Resus": []
+      },
+      "incoming": [],
+      "offgoing": [],
+      "support": {
+        "techs": [],
+        "vols": [],
+        "sitters": []
+      },
+      "comments": "",
+      "archivedAt": "2025-08-15T04:44:05.857Z"
+    },
+    {
+      "date": "2025-08-15",
+      "shift": "night",
+      "charge": {
+        "nurseId": "594885",
+        "status": [],
+        "students": []
+      },
+      "triage": {},
+      "zones": {
+        "Beds 1–3": [
+          {
+            "nurseId": "378859",
+            "status": [
+              "break",
+              "dto"
+            ],
+            "students": []
+          }
+        ],
+        "Beds 4-7": [],
+        "Beds 8, 9, 13, 14": [
+          {
+            "nurseId": "731020",
+            "status": [],
+            "students": [
+              "Jane"
+            ]
+          }
+        ],
+        "Beds 17-20": [
+          {
+            "nurseId": "462499",
+            "status": [],
+            "students": []
+          }
+        ],
+        "Beds 21-24": [
+          {
+            "nurseId": "783773",
+            "status": [],
+            "students": []
+          }
+        ],
+        "Fast Track": [
+          {
+            "nurseId": "518014",
+            "status": [],
+            "students": []
+          }
+        ],
+        "Float": [
+          {
+            "nurseId": "483366",
+            "status": [],
+            "students": []
+          }
+        ]
+      },
+      "incoming": [],
+      "comments": "",
+      "activatedAt": "2025-08-15T04:44:05.859Z",
+      "offgoing": [],
+      "support": {
+        "techs": [
+          "Joseph"
+        ],
+        "vols": [
+          "Jane"
+        ],
+        "sitters": [
+          "Tommy"
+        ]
+      },
+      "archivedAt": "2025-08-15T04:53:45.835Z"
+    }
+  ],
+  "config": {
+    "date": "2025-08-15",
+    "shift": "day",
+    "anchors": {
+      "day": "07:00",
+      "night": "19:00"
+    },
+    "zones": [
+      "Beds 1–3",
+      "Beds 4-7",
+      "Beds 8, 9, 13, 14",
+      "Beds 17-20",
+      "Beds 21-24",
+      "Fast Track",
+      "Float"
+    ],
+    "staff": [
+      {
+        "id": "594885",
+        "name": "Sasha Quintero",
+        "rf": "57802826",
+        "class": "jewish"
+      },
+      {
+        "id": "372350",
+        "name": "Zara Zuniga",
+        "rf": "24426223",
+        "class": "float"
+      },
+      {
+        "id": "400313",
+        "name": "Alex Reed",
+        "rf": "55222172",
+        "class": "jewish"
+      },
+      {
+        "id": "378859",
+        "name": "Zadie Qadir",
+        "rf": "12204313",
+        "class": "float"
+      },
+      {
+        "id": "715964",
+        "name": "Jordan Zimmerman",
+        "rf": "64267161",
+        "class": "float"
+      },
+      {
+        "id": "660402",
+        "name": "Sienna Shah",
+        "rf": "17963135",
+        "class": "jewish"
+      },
+      {
+        "id": "731020",
+        "name": "Alex Qadir",
+        "rf": "49960701",
+        "class": "float"
+      },
+      {
+        "id": "462499",
+        "name": "Ray Shah",
+        "rf": "09380780",
+        "class": "float"
+      },
+      {
+        "id": "201149",
+        "name": "Zara Qadir",
+        "rf": "40834506",
+        "class": "travel"
+      },
+      {
+        "id": "751740",
+        "name": "Reese Smith",
+        "rf": "86194676",
+        "class": "travel"
+      },
+      {
+        "id": "783773",
+        "name": "Avery Soto",
+        "rf": "37797900",
+        "class": "jewish"
+      },
+      {
+        "id": "741439",
+        "name": "Jamie Russell",
+        "rf": "05051944",
+        "class": "jewish"
+      },
+      {
+        "id": "518014",
+        "name": "Rowan Reyes",
+        "rf": "26201150",
+        "class": "travel"
+      },
+      {
+        "id": "731619",
+        "name": "Remy Zafar",
+        "rf": "49781534",
+        "class": "jewish"
+      },
+      {
+        "id": "742425",
+        "name": "Skyler Zimmerman",
+        "rf": "19223334",
+        "class": "travel"
+      },
+      {
+        "id": "483366",
+        "name": "Ray Saunders",
+        "rf": "87297457",
+        "class": "jewish"
+      },
+      {
+        "id": "309445",
+        "name": "Riley Reed",
+        "rf": "93336886",
+        "class": "jewish"
+      },
+      {
+        "id": "606407",
+        "name": "Skyler Ramirez",
+        "rf": "59146501",
+        "class": "jewish"
+      },
+      {
+        "id": "677666",
+        "name": "Ray Zuniga",
+        "rf": "52652655",
+        "class": "float"
+      },
+      {
+        "id": "633266",
+        "name": "Ray Reyes",
+        "rf": "42589507",
+        "class": "float"
+      },
+      {
+        "id": "448316",
+        "name": "Ray Ruffin",
+        "rf": "03672801",
+        "class": "float"
+      },
+      {
+        "id": "712120",
+        "name": "Zara Zafar",
+        "rf": "19156674",
+        "class": "travel"
+      },
+      {
+        "id": "639370",
+        "name": "Remy Ramos",
+        "rf": "58245851",
+        "class": "jewish"
+      },
+      {
+        "id": "278804",
+        "name": "Sage Saunders",
+        "rf": "67276202",
+        "class": "float"
+      },
+      {
+        "id": "644516",
+        "name": "Serena Zuniga",
+        "rf": "33058161",
+        "class": "float"
+      }
+    ],
+    "pin": "4911",
+    "relockMin": 3,
+    "icsUrl": "",
+    "jiggler": true
+  },
+  "history": {
+    "378859": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 4-7",
+        "dto": false
+      },
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 1–3",
+        "dto": true
+      }
+    ],
+    "400313": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Triage",
+        "dto": false
+      }
+    ],
+    "462499": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 17-20",
+        "dto": false
+      },
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 17-20",
+        "dto": false
+      }
+    ],
+    "483366": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Float",
+        "dto": false
+      }
+    ],
+    "518014": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Fast Track",
+        "dto": false
+      }
+    ],
+    "594885": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Charge",
+        "dto": false
+      },
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Charge",
+        "dto": false
+      }
+    ],
+    "606407": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Float",
+        "dto": false
+      }
+    ],
+    "660402": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 8, 9, 13, 14",
+        "dto": false
+      }
+    ],
+    "715964": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 1–3",
+        "dto": false
+      }
+    ],
+    "731020": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 8, 9, 13, 14",
+        "dto": false
+      }
+    ],
+    "741439": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 21-24",
+        "dto": false
+      }
+    ],
+    "742425": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Fast Track",
+        "dto": false
+      }
+    ],
+    "783773": [
+      {
+        "date": "2025-08-15",
+        "shift": "night",
+        "role": "Beds 21-24",
+        "dto": false
+      }
+    ]
+  },
+  "pending:2025-08-15:day": {
+    "date": "2025-08-15",
+    "shift": "day",
+    "charge": {
+      "nurseId": "594885",
+      "status": [],
+      "students": []
+    },
+    "triage": {
+      "nurseId": "372350",
+      "status": [],
+      "students": []
+    },
+    "zones": {
+      "Beds 1–3": [
+        {
+          "nurseId": "378859",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Beds 4-7": [
+        {
+          "nurseId": "660402",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Beds 8, 9, 13, 14": [
+        {
+          "nurseId": "731020",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Beds 17-20": [
+        {
+          "nurseId": "462499",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Beds 21-24": [],
+      "Fast Track": [
+        {
+          "nurseId": "483366",
+          "status": [],
+          "students": []
+        }
+      ],
+      "Float": [
+        {
+          "nurseId": "677666",
+          "status": [],
+          "students": []
+        }
+      ]
+    },
+    "incoming": []
+  },
+  "staff": [
+    {
+      "id": "594885",
+      "name": "Sasha Quintero",
+      "rf": "57802826",
+      "class": "jewish"
+    },
+    {
+      "id": "372350",
+      "name": "Zara Zuniga",
+      "rf": "24426223",
+      "class": "float"
+    },
+    {
+      "id": "400313",
+      "name": "Alex Reed",
+      "rf": "55222172",
+      "class": "jewish"
+    },
+    {
+      "id": "378859",
+      "name": "Zadie Qadir",
+      "rf": "12204313",
+      "class": "float"
+    },
+    {
+      "id": "715964",
+      "name": "Jordan Zimmerman",
+      "rf": "64267161",
+      "class": "float"
+    },
+    {
+      "id": "660402",
+      "name": "Sienna Shah",
+      "rf": "17963135",
+      "class": "jewish"
+    },
+    {
+      "id": "731020",
+      "name": "Alex Qadir",
+      "rf": "49960701",
+      "class": "float"
+    },
+    {
+      "id": "462499",
+      "name": "Ray Shah",
+      "rf": "09380780",
+      "class": "float"
+    },
+    {
+      "id": "201149",
+      "name": "Zara Qadir",
+      "rf": "40834506",
+      "class": "travel"
+    },
+    {
+      "id": "751740",
+      "name": "Reese Smith",
+      "rf": "86194676",
+      "class": "travel"
+    },
+    {
+      "id": "783773",
+      "name": "Avery Soto",
+      "rf": "37797900",
+      "class": "jewish"
+    },
+    {
+      "id": "741439",
+      "name": "Jamie Russell",
+      "rf": "05051944",
+      "class": "jewish"
+    },
+    {
+      "id": "518014",
+      "name": "Rowan Reyes",
+      "rf": "26201150",
+      "class": "travel"
+    },
+    {
+      "id": "731619",
+      "name": "Remy Zafar",
+      "rf": "49781534",
+      "class": "jewish"
+    },
+    {
+      "id": "742425",
+      "name": "Skyler Zimmerman",
+      "rf": "19223334",
+      "class": "travel"
+    },
+    {
+      "id": "483366",
+      "name": "Ray Saunders",
+      "rf": "87297457",
+      "class": "jewish"
+    },
+    {
+      "id": "309445",
+      "name": "Riley Reed",
+      "rf": "93336886",
+      "class": "jewish"
+    },
+    {
+      "id": "606407",
+      "name": "Skyler Ramirez",
+      "rf": "59146501",
+      "class": "jewish"
+    },
+    {
+      "id": "677666",
+      "name": "Ray Zuniga",
+      "rf": "52652655",
+      "class": "float"
+    },
+    {
+      "id": "633266",
+      "name": "Ray Reyes",
+      "rf": "42589507",
+      "class": "float"
+    },
+    {
+      "id": "448316",
+      "name": "Ray Ruffin",
+      "rf": "03672801",
+      "class": "float"
+    },
+    {
+      "id": "712120",
+      "name": "Zara Zafar",
+      "rf": "19156674",
+      "class": "travel"
+    },
+    {
+      "id": "639370",
+      "name": "Remy Ramos",
+      "rf": "58245851",
+      "class": "jewish"
+    },
+    {
+      "id": "278804",
+      "name": "Sage Saunders",
+      "rf": "67276202",
+      "class": "float"
+    },
+    {
+      "id": "644516",
+      "name": "Serena Zuniga",
+      "rf": "33058161",
+      "class": "float"
+    }
+  ]
+}
