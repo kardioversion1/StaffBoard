@@ -1,0 +1,9 @@
+{
+  "name": "staffboard",
+  "version": "1.0.0",
+  "description": "Staffing board UI",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
