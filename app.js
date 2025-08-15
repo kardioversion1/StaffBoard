@@ -145,19 +145,26 @@ function bindInterface(){
 
 
 async function init(){
-  const cfg=await DB.get(KS.CONFIG); if(cfg) Object.assign(STATE,cfg);
-  const staff=await DB.get(KS.STAFF); if(staff) STATE.staff=staff;
-  $('#datePicker').value=STATE.date; $('#shiftSel').value=STATE.shift;
+  try{
+    const cfg=await DB.get(KS.CONFIG);
+    if(cfg) Object.assign(STATE,cfg);
+    const staff=await DB.get(KS.STAFF);
+    if(staff) STATE.staff=staff;
+  }catch(err){
+    console.error('DB init error', err);
+  }
+
+  $('#datePicker').value=STATE.date;
+  $('#shiftSel').value=STATE.shift;
 
   applyInterface();
   updateDateLabel();
   updateLockUI();
+
   bindTabs();
   bindPending();
   bindToolbar();
   bindInterface();
-
-  bindTabs(); bindPending();
 
   renderTimeWeather();
   fetchWeather();
