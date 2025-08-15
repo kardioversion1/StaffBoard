@@ -18,22 +18,12 @@
       <button class="btn" id="prevDay">◀︎ Prev</button>
       <input class="input" type="date" id="datePicker" />
       <button class="btn" id="nextDay">Next ▶︎</button>
-      <select class="select" id="shiftSel">
-        <option value="day">Day (07–19)</option>
-        <option value="night">Night (19–07)</option>
-      </select>
-    </div>
-    <div class="toolbar">
-      <span id="lockState" class="subtitle">Unlocked</span>
-      <button class="btn accent" id="unlockBtn">Lock</button>
       <button class="btn ok" id="printBtn">Print</button>
-      <button class="btn warn" id="startNewShiftBtn">Start New Shift</button>
     </div>
   </header>
 
   <div class="tabs">
     <div class="tab active" data-tab="main">Main</div>
-    <div class="tab" data-tab="pending">Pending</div>
     <div class="tab" data-tab="settings">Settings</div>
   </div>
 
@@ -71,34 +61,6 @@
       <div class="info-bar" id="infoBar"></div>
 
   </div>
-
-  <div id="tab-pending" style="display:none">
-    <div class="grid">
-      <div class="panel">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h3>Roster (Next Shift)</h3>
-          <div>
-            <input id="rosterSearch" class="input" placeholder="Search name / ID / RF" style="width:240px" />
-            <select id="rosterSort" class="select">
-              <option value="name">Name (A–Z)</option>
-              <option value="class">Class → Name</option>
-              <option value="id">ID (ascending)</option>
-            </select>
-          </div>
-        </div>
-        <div id="rosterWrap"><div id="pendingRoster" class="listbox"></div></div>
-      </div>
-      <div class="panel">
-        <h3>Pending Assignments</h3>
-        <div class="row">
-          <div class="slot drop" data-pending="charge"><span class="pill">Charge</span></div>
-          <div class="slot drop" data-pending="triage"><span class="pill">Triage</span></div>
-        </div>
-        <div id="pendingZones"></div>
-      </div>
-    </div>
-  </div>
-
   <div id="tab-settings" style="display:none">
     <div class="panel">
       <h3>Interface</h3>
@@ -128,6 +90,7 @@
 </div>
 
 <script type="module" src="app.js"></script>
+<script nomodule src="bundle.js"></script>
 </body>
 </html>
 

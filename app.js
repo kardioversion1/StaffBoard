@@ -2,7 +2,7 @@
 import { $, $$ } from './utils.js';
 import { DB, KS } from './db.js';
 import { STATE } from './state.js';
-import { renderAll, renderPending } from './render.js';
+import { renderAll } from './render.js';
 
 
 const ACCENTS={
@@ -53,9 +53,7 @@ function renderTimeWeather(){
 function saveConfig(){
   return DB.set(KS.CONFIG, {
     date: STATE.date,
-    shift: STATE.shift,
     zones: STATE.zones,
-    pin: STATE.pin,
     theme: STATE.theme,
     accent: STATE.accent
   });
@@ -64,12 +62,7 @@ function saveConfig(){
 function updateDateLabel(){
   const d = new Date(STATE.date);
   const opts = { weekday:'short', month:'short', day:'numeric', year:'numeric' };
-  $('#dateLabel').textContent = `${d.toLocaleDateString(undefined, opts)} — ${STATE.shift === 'day' ? 'Day' : 'Night'}`;
-}
-
-function updateLockUI(){
-  $('#lockState').textContent = STATE.locked ? 'Locked' : 'Unlocked';
-  $('#unlockBtn').textContent = STATE.locked ? 'Unlock' : 'Lock';
+  $('#dateLabel').textContent = d.toLocaleDateString(undefined, opts);
 }
 
 
@@ -78,14 +71,8 @@ function bindTabs(){
     $$('.tab').forEach(x=>x.classList.remove('active'));
     t.classList.add('active');
     $('#tab-main').style.display=t.dataset.tab==='main'?'block':'none';
-    $('#tab-pending').style.display=t.dataset.tab==='pending'?'block':'none';
     $('#tab-settings').style.display=t.dataset.tab==='settings'?'block':'none';
   }));
-}
-
-function bindPending(){
-  $('#rosterSearch').oninput = renderPending;
-  $('#rosterSort').onchange = renderPending;
 }
 
 function bindToolbar(){
@@ -111,21 +98,7 @@ function bindToolbar(){
     await saveConfig();
     renderAll();
   };
-  $('#shiftSel').onchange = async e=>{
-    STATE.shift = e.target.value;
-    updateDateLabel();
-    await saveConfig();
-    renderAll();
-  };
-  $('#unlockBtn').onclick = async ()=>{
-    STATE.locked = !STATE.locked;
-    updateLockUI();
-  };
-  $('#startNewShiftBtn').onclick = async ()=>{
-    const empty = { zones: Object.fromEntries(STATE.zones.map(z=>[z,[]])) };
-    await DB.set(KS.ACTIVE(STATE.date, STATE.shift), empty);
-    renderAll();
-  };
+  $('#printBtn').onclick = () => window.print();
 }
 
 function bindInterface(){
@@ -145,19 +118,23 @@ function bindInterface(){
 
 
 async function init(){
-  const cfg=await DB.get(KS.CONFIG); if(cfg) Object.assign(STATE,cfg);
-  const staff=await DB.get(KS.STAFF); if(staff) STATE.staff=staff;
-  $('#datePicker').value=STATE.date; $('#shiftSel').value=STATE.shift;
+  try{
+    const cfg=await DB.get(KS.CONFIG);
+    if(cfg) Object.assign(STATE,cfg);
+    const staff=await DB.get(KS.STAFF);
+    if(staff) STATE.staff=staff;
+  }catch(err){
+    console.error('DB init error', err);
+  }
+
+  $('#datePicker').value=STATE.date;
 
   applyInterface();
   updateDateLabel();
-  updateLockUI();
+
   bindTabs();
-  bindPending();
   bindToolbar();
   bindInterface();
-
-  bindTabs(); bindPending();
 
   renderTimeWeather();
   fetchWeather();
