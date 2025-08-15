@@ -9,6 +9,8 @@ function setTheme(theme) {
   document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
   const btn = $('#themeToggle');
   if (btn) btn.textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode';
+  const sel = $('#themeSel');
+  if (sel) sel.value = theme;
   debug('Theme set to ' + theme);
 }
 
@@ -96,6 +98,16 @@ async function wireControls() {
   if (toggle) {
     toggle.addEventListener('click', () => {
       setTheme(STATE.theme === 'light' ? 'dark' : 'light');
+      DB.set(KS.CONFIG, { theme: STATE.theme, accent: STATE.accent })
+        .catch(e => debug('Config save error: ' + e.message));
+    });
+  }
+
+  // Theme selector (settings tab)
+  const themeSel = $('#themeSel');
+  if (themeSel) {
+    themeSel.addEventListener('change', e => {
+      setTheme(e.target.value);
       DB.set(KS.CONFIG, { theme: STATE.theme, accent: STATE.accent })
         .catch(e => debug('Config save error: ' + e.message));
     });

@@ -24,11 +24,11 @@
   </header>
 
   <div class="tabs">
-    <div class="tab active" data-tab="main">Main</div>
-    <div class="tab" data-tab="settings">Settings</div>
+    <div class="tab" data-tab="main">Main</div>
+    <div class="tab active" data-tab="settings">Settings</div>
   </div>
 
-  <div id="tab-main">
+  <div id="tab-main" style="display:none">
 
       <div class="board">
         <div class="panel">
@@ -63,9 +63,16 @@
       <div class="debug-log" id="debugLog"></div>
 
   </div>
-  <div id="tab-settings" style="display:none">
+  <div id="tab-settings">
     <div class="panel">
       <h3>Interface</h3>
+      <div class="row">
+        <label for="themeSel">Theme</label>
+        <select id="themeSel" class="select">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
       <div class="row">
         <label for="accentSel">Accent</label>
         <select id="accentSel" class="select">
