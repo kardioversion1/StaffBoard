@@ -4,6 +4,18 @@ import { DB, KS } from './db.js';
 import { STATE } from './state.js';
 import { renderAll, renderPending } from './render.js';
 
+const ACCENTS={
+  blue:'#0090ff',
+  green:'#28c990',
+  orange:'#f5a524',
+  purple:'#b259d0',
+  pink:'#ff5b9a'
+};
+
+function applyInterface(){
+  document.documentElement.dataset.theme=STATE.theme;
+  document.documentElement.style.setProperty('--accent', ACCENTS[STATE.accent]||ACCENTS.blue);
+}
 
 function saveConfig(){
   return DB.set(KS.CONFIG, {
@@ -11,7 +23,9 @@ function saveConfig(){
     shift: STATE.shift,
     locked: STATE.locked,
     zones: STATE.zones,
-    pin: STATE.pin
+    pin: STATE.pin,
+    theme: STATE.theme,
+    accent: STATE.accent
   });
 }
 
@@ -83,17 +97,34 @@ function bindToolbar(){
   };
 }
 
+function bindInterface(){
+  $('#themeSel').value = STATE.theme;
+  $('#accentSel').value = STATE.accent;
+  $('#themeSel').onchange = async e=>{
+    STATE.theme = e.target.value;
+    applyInterface();
+    await saveConfig();
+  };
+  $('#accentSel').onchange = async e=>{
+    STATE.accent = e.target.value;
+    applyInterface();
+    await saveConfig();
+  };
+}
+
 
 async function init(){
   const cfg=await DB.get(KS.CONFIG); if(cfg) Object.assign(STATE,cfg);
   const staff=await DB.get(KS.STAFF); if(staff) STATE.staff=staff;
   $('#datePicker').value=STATE.date; $('#shiftSel').value=STATE.shift;
 
+  applyInterface();
   updateDateLabel();
   updateLockUI();
   bindTabs();
   bindPending();
   bindToolbar();
+  bindInterface();
 
   bindTabs(); bindPending();
 
