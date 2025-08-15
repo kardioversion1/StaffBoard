@@ -4,6 +4,39 @@ import { DB, KS } from './db.js';
 import { STATE } from './state.js';
 import { renderAll, renderPending } from './render.js';
 
+const WEATHER_API = 'https://api.open-meteo.com/v1/forecast?latitude=38.2527&longitude=-85.7585&current_weather=true&temperature_unit=fahrenheit';
+const WEATHER_ICONS = {
+  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',
+  45:'🌫️',48:'🌫️',
+  51:'🌦️',53:'🌦️',55:'🌦️',
+  56:'🌧️',57:'🌧️',
+  61:'🌧️',63:'🌧️',65:'🌧️',
+  66:'🌧️',67:'🌧️',
+  71:'🌨️',73:'🌨️',75:'❄️',77:'🌨️',
+  80:'🌦️',81:'🌧️',82:'🌧️',
+  85:'🌨️',86:'🌨️',
+  95:'⛈️',96:'⛈️',99:'⛈️'
+};
+let weatherDisplay='';
+
+async function fetchWeather(){
+  try{
+    const res=await fetch(WEATHER_API);
+    const data=await res.json();
+    const w=data.current_weather;
+    const icon=WEATHER_ICONS[w.weathercode]||'';
+    weatherDisplay=`${icon} ${Math.round(w.temperature)}°F`;
+  }catch(err){
+    console.error('weather',err);
+    weatherDisplay='';
+  }
+  renderTimeWeather();
+}
+
+function renderTimeWeather(){
+  const time=new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  $('#timeWeather').textContent = weatherDisplay ? `${time} ${weatherDisplay}` : time;
+}
 
 function saveConfig(){
   return DB.set(KS.CONFIG, {
@@ -94,6 +127,11 @@ async function init(){
   bindToolbar();
 
   bindTabs(); bindPending();
+
+  renderTimeWeather();
+  fetchWeather();
+  setInterval(renderTimeWeather, 60*1000);
+  setInterval(fetchWeather, 30*60*1000);
 
   renderAll();
 }
