@@ -18,6 +18,7 @@
       <button class="btn" id="prevDay">◀︎ Prev</button>
       <input class="input" type="date" id="datePicker" />
       <button class="btn" id="nextDay">Next ▶︎</button>
+      <button class="btn" id="themeToggle">Light Mode</button>
       <button class="btn ok" id="printBtn">Print</button>
     </div>
   </header>
@@ -65,13 +66,6 @@
     <div class="panel">
       <h3>Interface</h3>
       <div class="row">
-        <label for="themeSel">Theme</label>
-        <select id="themeSel" class="select">
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
-      </div>
-      <div class="row">
         <label for="accentSel">Accent</label>
         <select id="accentSel" class="select">
           <option value="blue">Blue</option>
@@ -87,10 +81,10 @@
       <div id="nurseList" class="listbox"></div>
     </div>
   </div>
+  <div class="menu-overlay"></div>
 </div>
 
 <script type="module" src="app.js"></script>
 <script nomodule src="bundle.js"></script>
 </body>
 </html>
-
