@@ -131,6 +131,11 @@ async function init(){
 
   applyInterface();
   updateDateLabel();
+  $('#shiftSel').value=STATE.shift;
+
+  applyInterface();
+  updateDateLabel();
+  updateLockUI();
 
   bindTabs();
   bindToolbar();
