@@ -14,7 +14,17 @@ export async function renderMain(){
 
   ['charge','triage'].forEach(role=>{
     const el=document.querySelector(`.slot[data-role="${role}"]`);
-    if(el) el.innerHTML=nurseTile(getById(act[role]?.nurseId));
+    if(el){
+      el.innerHTML=nurseTile(getById(act[role]?.nurseId));
+      el.onclick=async ()=>{
+        if(STATE.locked) return;
+        const id=prompt(`Nurse ID for ${role}:`, act[role]?.nurseId||'');
+        if(!id) return;
+        act[role]={nurseId:id};
+        await DB.set(KS.ACTIVE(STATE.date, STATE.shift), act);
+        renderMain();
+      };
+    }
   });
 
   const zc = $('#zoneContainer');
@@ -22,12 +32,25 @@ export async function renderMain(){
   STATE.zones.forEach(z=>{
     zc.appendChild(renderZone(z, act.zones[z]||[]));
   });
+
+  zc.querySelectorAll('.zone-body').forEach(body=>{
+    body.onclick=async ()=>{
+      if(STATE.locked) return;
+      const zone=body.dataset.zone;
+      const id=prompt(`Nurse ID for ${zone}:`);
+      if(!id) return;
+      act.zones[zone]=act.zones[zone]||[];
+      act.zones[zone].push({nurseId:id});
+      await DB.set(KS.ACTIVE(STATE.date, STATE.shift), act);
+      renderMain();
+    };
+  });
 }
 
 function renderZone(name, assignments){
   const wrap=document.createElement('div');
   wrap.className='zone-card';
-  wrap.innerHTML=`<div class="zone-title"><span class="name">${name}</span></div><div class="zone-body"></div>`;
+  wrap.innerHTML=`<div class="zone-title"><span class="name">${name}</span></div><div class="zone-body" data-zone="${name}"></div>`;
   const body=wrap.querySelector('.zone-body');
   assignments.forEach(a=>{
     const div=document.createElement('div');
