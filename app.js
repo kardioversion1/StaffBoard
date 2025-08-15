@@ -9,7 +9,6 @@ function saveConfig(){
   return DB.set(KS.CONFIG, {
     date: STATE.date,
     shift: STATE.shift,
-    locked: STATE.locked,
     zones: STATE.zones,
     pin: STATE.pin
   });
@@ -74,7 +73,6 @@ function bindToolbar(){
   $('#unlockBtn').onclick = async ()=>{
     STATE.locked = !STATE.locked;
     updateLockUI();
-    await saveConfig();
   };
   $('#startNewShiftBtn').onclick = async ()=>{
     const empty = { zones: Object.fromEntries(STATE.zones.map(z=>[z,[]])) };
