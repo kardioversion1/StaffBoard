@@ -1,15 +1,23 @@
 
-import { $, nurseTile } from './utils.js';
+import { $, nurseTile, debug } from './utils.js';
 import { DB, KS } from './db.js';
 import { STATE, getById } from './state.js';
 
 export async function renderAll(){
-  await renderMain();
+  debug('renderAll start');
+  await renderMain().catch(e=>debug('renderMain error: '+e.message));
   renderSettings();
+  debug('renderAll done');
 }
 
 export async function renderMain(){
-  const act = await DB.get(KS.ACTIVE(STATE.date)) || {zones:Object.fromEntries(STATE.zones.map(z=>[z,[]]))};
+  let act;
+  try{
+    act = await DB.get(KS.ACTIVE(STATE.date));
+  }catch(e){
+    debug('Active load error: '+e.message);
+  }
+  act = act || {zones:Object.fromEntries(STATE.zones.map(z=>[z,[]]))};
 
   ['charge','triage'].forEach(role=>{
     const el=document.querySelector(`.slot[data-role="${role}"]`);
@@ -19,8 +27,8 @@ export async function renderMain(){
         const id=prompt(`Nurse ID for ${role}:`, act[role]?.nurseId||'');
         if(!id) return;
         act[role]={nurseId:id};
-        await DB.set(KS.ACTIVE(STATE.date), act);
-        renderMain();
+        await DB.set(KS.ACTIVE(STATE.date), act).catch(e=>debug('Role save error: '+e.message));
+        renderMain().catch(e=>debug('renderMain error: '+e.message));
       };
     }
   });
@@ -38,8 +46,8 @@ export async function renderMain(){
       if(!id) return;
       act.zones[zone]=act.zones[zone]||[];
       act.zones[zone].push({nurseId:id});
-      await DB.set(KS.ACTIVE(STATE.date), act);
-      renderMain();
+      await DB.set(KS.ACTIVE(STATE.date), act).catch(e=>debug('Zone save error: '+e.message));
+      renderMain().catch(e=>debug('renderMain error: '+e.message));
     };
   });
 }
@@ -65,4 +73,5 @@ export function renderSettings(){
     it.textContent=`${s.name} • ${s.class||'other'} • RF ${s.rf||'—'} • id: ${s.id}`;
     nl.appendChild(it);
   });
+  debug('Settings rendered');
 }
