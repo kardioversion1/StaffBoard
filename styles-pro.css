@@ -79,6 +79,8 @@ header{display:grid;grid-template-columns:1fr auto auto;gap:var(--gap);align-ite
 .listbox .item{padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--tab);margin-bottom:8px;cursor:grab}
 .drop-hover{ outline:2px dashed var(--accent); outline-offset:3px; }
 
+#supportList,#incomingList,#offgoingList{min-height:60px}
+
 .board{display:grid;grid-template-columns:1fr 260px;gap:var(--gap);align-items:start}
 .main{display:flex;flex-direction:column;gap:var(--gap)}
 .lead-row{display:flex;gap:var(--gap);margin-bottom:var(--gap)}
