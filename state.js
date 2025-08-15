@@ -7,7 +7,9 @@ export const STATE = {
   locked: false,
   zones: ['Beds 1–3','Beds 4–7','Beds 8–10','Fast Track'],
   staff: [],
-  pin: '4911'
+  pin: '4911',
+  theme: 'dark',
+  accent: 'blue'
 };
 
 export const getById = id => STATE.staff.find(s=>s.id===id);
