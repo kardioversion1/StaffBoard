@@ -11,10 +11,12 @@ export async function renderAll(){
 
 export async function renderMain(){
   const act = await DB.get(KS.ACTIVE(STATE.date, STATE.shift)) || {zones:Object.fromEntries(STATE.zones.map(z=>[z,[]]))};
+
   ['charge','triage'].forEach(role=>{
     const el=document.querySelector(`.slot[data-role="${role}"]`);
     if(el) el.innerHTML=nurseTile(getById(act[role]?.nurseId));
   });
+
   const zc = $('#zoneContainer');
   zc.innerHTML='';
   STATE.zones.forEach(z=>{

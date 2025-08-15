@@ -4,6 +4,7 @@ import { DB, KS } from './db.js';
 import { STATE } from './state.js';
 import { renderAll, renderPending } from './render.js';
 
+
 function saveConfig(){
   return DB.set(KS.CONFIG, {
     date: STATE.date,
@@ -24,6 +25,7 @@ function updateLockUI(){
   $('#lockState').textContent = STATE.locked ? 'Locked' : 'Unlocked';
   $('#unlockBtn').textContent = STATE.locked ? 'Unlock' : 'Lock';
 }
+
 
 function bindTabs(){
   $$('.tab').forEach(t=>t.addEventListener('click',()=>{
@@ -81,15 +83,20 @@ function bindToolbar(){
   };
 }
 
+
 async function init(){
   const cfg=await DB.get(KS.CONFIG); if(cfg) Object.assign(STATE,cfg);
   const staff=await DB.get(KS.STAFF); if(staff) STATE.staff=staff;
   $('#datePicker').value=STATE.date; $('#shiftSel').value=STATE.shift;
+
   updateDateLabel();
   updateLockUI();
   bindTabs();
   bindPending();
   bindToolbar();
+
+  bindTabs(); bindPending();
+
   renderAll();
 }
 window.addEventListener('DOMContentLoaded', init);
