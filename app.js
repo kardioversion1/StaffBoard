@@ -4,6 +4,29 @@ import { DB, KS } from './db.js';
 import { STATE } from './state.js';
 import { renderAll, renderPending } from './render.js';
 
+
+function saveConfig(){
+  return DB.set(KS.CONFIG, {
+    date: STATE.date,
+    shift: STATE.shift,
+    locked: STATE.locked,
+    zones: STATE.zones,
+    pin: STATE.pin
+  });
+}
+
+function updateDateLabel(){
+  const d = new Date(STATE.date);
+  const opts = { weekday:'short', month:'short', day:'numeric', year:'numeric' };
+  $('#dateLabel').textContent = `${d.toLocaleDateString(undefined, opts)} — ${STATE.shift === 'day' ? 'Day' : 'Night'}`;
+}
+
+function updateLockUI(){
+  $('#lockState').textContent = STATE.locked ? 'Locked' : 'Unlocked';
+  $('#unlockBtn').textContent = STATE.locked ? 'Unlock' : 'Lock';
+}
+
+
 function bindTabs(){
   $$('.tab').forEach(t=>t.addEventListener('click',()=>{
     $$('.tab').forEach(x=>x.classList.remove('active'));
@@ -19,11 +42,61 @@ function bindPending(){
   $('#rosterSort').onchange = renderPending;
 }
 
+function bindToolbar(){
+  $('#prevDay').onclick = async ()=>{
+    const d = new Date(STATE.date); d.setDate(d.getDate()-1);
+    STATE.date = d.toISOString().slice(0,10);
+    $('#datePicker').value = STATE.date;
+    updateDateLabel();
+    await saveConfig();
+    renderAll();
+  };
+  $('#nextDay').onclick = async ()=>{
+    const d = new Date(STATE.date); d.setDate(d.getDate()+1);
+    STATE.date = d.toISOString().slice(0,10);
+    $('#datePicker').value = STATE.date;
+    updateDateLabel();
+    await saveConfig();
+    renderAll();
+  };
+  $('#datePicker').onchange = async e=>{
+    STATE.date = e.target.value || STATE.date;
+    updateDateLabel();
+    await saveConfig();
+    renderAll();
+  };
+  $('#shiftSel').onchange = async e=>{
+    STATE.shift = e.target.value;
+    updateDateLabel();
+    await saveConfig();
+    renderAll();
+  };
+  $('#unlockBtn').onclick = async ()=>{
+    STATE.locked = !STATE.locked;
+    updateLockUI();
+    await saveConfig();
+  };
+  $('#startNewShiftBtn').onclick = async ()=>{
+    const empty = { zones: Object.fromEntries(STATE.zones.map(z=>[z,[]])) };
+    await DB.set(KS.ACTIVE(STATE.date, STATE.shift), empty);
+    renderAll();
+  };
+}
+
+
 async function init(){
   const cfg=await DB.get(KS.CONFIG); if(cfg) Object.assign(STATE,cfg);
   const staff=await DB.get(KS.STAFF); if(staff) STATE.staff=staff;
   $('#datePicker').value=STATE.date; $('#shiftSel').value=STATE.shift;
+
+  updateDateLabel();
+  updateLockUI();
+  bindTabs();
+  bindPending();
+  bindToolbar();
+
   bindTabs(); bindPending();
+
   renderAll();
 }
 window.addEventListener('DOMContentLoaded', init);

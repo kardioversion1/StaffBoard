@@ -53,11 +53,9 @@ header{display:grid;grid-template-columns:1fr auto auto;gap:var(--gap);align-ite
 .badge.f{background:#2a1b15;color:#ffc6a1;border-color:#5b3929}
 .badge.o{background:#26262b;color:#c7c7cf;border-color:#3a3a44}
 .zone-card{ border:1.5px solid var(--line); background:var(--tab); border-radius:16px; padding:10px; display:flex; flex-direction:column; }
-
 .zone-title{ display:flex; justify-content:space-between; align-items:center; padding:8px 10px; margin-bottom:8px; border-bottom:1px solid var(--line); }
-=======
+.zone-title{ display:flex; justify-content:space-between; align-items:center; padding:8px 10px; margin-bottom:8px; border-bottom:1px solid var(--line); }
 .zone-title{ display:flex; justify-content:space-between; align-items:center; padding:8px 10px; margin-bottom:8px; border-bottom:1px solid #273044; }
- main
 .zone-title .name{ font-size: clamp(18px, 1.6vw, 22px); font-weight:900; letter-spacing:.2px; }
 .zone-body{ display:flex; flex-direction:column; gap:10px; }
 #zoneContainer{ display:grid; grid-template-columns: repeat(4, minmax(260px, 1fr)); gap:12px; }
@@ -73,8 +71,7 @@ header{display:grid;grid-template-columns:1fr auto auto;gap:var(--gap);align-ite
 .lead-row{display:flex;gap:var(--gap);margin-bottom:var(--gap)}
 .side{display:flex;flex-direction:column;gap:var(--gap)}
 .info-bar{margin-top:var(--gap);padding:10px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel);min-height:var(--cell)}
-=======
- main
+
 .menu-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:9998}
 .menu-card{width:min(460px,92vw);background:var(--control);border:1px solid var(--line);border-radius:16px;padding:12px}
 .menu-card h3{margin:0 0 8px 0}

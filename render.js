@@ -16,8 +16,7 @@ export async function renderMain(){
     const el=document.querySelector(`.slot[data-role="${role}"]`);
     if(el) el.innerHTML=nurseTile(getById(act[role]?.nurseId));
   });
-=======
- main
+
   const zc = $('#zoneContainer');
   zc.innerHTML='';
   STATE.zones.forEach(z=>{
