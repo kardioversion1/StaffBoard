@@ -28,4 +28,4 @@ export async function set(key,val){
   });
 }
 export const DB={get,set};
-export const KS={CONFIG:'config',STAFF:'staff',ACTIVE:(d,s)=>`active:${d}:${s}`,PENDING:(d,s)=>`pending:${d}:${s}`};
+export const KS={CONFIG:'config',STAFF:'staff',ACTIVE:d=>`active:${d}`};
