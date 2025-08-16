@@ -10,7 +10,15 @@
 html,body,#root{height:100%;margin:0;}
 body{background:var(--bg);color:var(--text);font-family:sans-serif;font-size:var(--f);}
 
-.board{display:flex;gap:var(--gap);padding:var(--gap);overflow-x:auto;}
+.app-root{width:1920px;height:1080px;display:flex;flex-direction:column;overflow:hidden;}
+.main-grid{flex:1;display:grid;grid-template-columns:72% 28%;height:100%;}
+.right-rail{display:flex;flex-direction:column;gap:var(--gap);padding:var(--gap);overflow:hidden;}
+.rail-card{background:var(--panel);padding:var(--gap);border-radius:var(--radius);min-height:100px;}
+.time-weather .clock{font-size:var(--f-xl);line-height:1;}
+.topbar.tv .search{display:none;}
+.topbar.tv button:first-child{display:none;}
+
+.board{display:flex;gap:var(--gap);padding:var(--gap);overflow-x:auto;height:100%;}
 .zone{background:var(--panel);padding:var(--gap);border-radius:var(--radius);min-width:220px;flex:0 0 auto;}
 .zone-title{margin-top:0;font-size:var(--f-lg);} 
 
