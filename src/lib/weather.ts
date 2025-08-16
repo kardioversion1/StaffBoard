@@ -35,13 +35,13 @@ export function conditionIcon(c: WeatherState['condition']): string {
   }
 }
 
-export function convertTemp(tempF: number | undefined, unit: TempUnit): number | undefined {
-  if (tempF === undefined) return undefined;
-  return unit === 'F' ? tempF : ((tempF - 32) * 5) / 9;
+export function convertTemp(tempC: number | undefined, unit: TempUnit): number | undefined {
+  if (tempC === undefined) return undefined;
+  return unit === 'C' ? tempC : (tempC * 9) / 5 + 32;
 }
 
-export function formatTemp(tempF: number | undefined, unit: TempUnit): string {
-  const t = convertTemp(tempF, unit);
+export function formatTemp(tempC: number | undefined, unit: TempUnit): string {
+  const t = convertTemp(tempC, unit);
   if (t === undefined) return '';
   return `${Math.round(t)}°${unit}`;
 }

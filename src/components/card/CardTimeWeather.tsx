@@ -41,20 +41,20 @@ const CardTimeWeather: React.FC = () => {
     <div className="rail-card time-weather">
       <div className="clock">{timeStr}</div>
       <div className="date">{dateStr}</div>
-      {settings.weatherEnabled ? (
-        weather && weather.tempF !== undefined ? (
-          <div className="weather">
-            <div className="loc">{weather.location}</div>
-            <div className="current">
-              <span className="icon">{conditionIcon(weather.condition)}</span>
-              <span className="temp">{formatTemp(weather.tempF, settings.weatherUnit || 'F')}</span>
-              <span className="cond">{weather.condition}</span>
-            </div>
-            {weather.highF !== undefined && weather.lowF !== undefined && (
-              <div className="range">
-                H {formatTemp(weather.highF, settings.weatherUnit || 'F')} / L {formatTemp(weather.lowF, settings.weatherUnit || 'F')}
+        {settings.weatherEnabled ? (
+          weather && weather.tempC !== undefined ? (
+            <div className="weather">
+              <div className="loc">{weather.location}</div>
+              <div className="current">
+                <span className="icon">{conditionIcon(weather.condition)}</span>
+                <span className="temp">{formatTemp(weather.tempC, settings.weatherUnit || 'F')}</span>
+                <span className="cond">{weather.condition}</span>
               </div>
-            )}
+              {weather.highC !== undefined && weather.lowC !== undefined && (
+                <div className="range">
+                  H {formatTemp(weather.highC, settings.weatherUnit || 'F')} / L {formatTemp(weather.lowC, settings.weatherUnit || 'F')}
+                </div>
+              )}
             {updatedStr && (
               <div className="updated">
                 Updated {updatedStr} {stale && <span className="stale">(stale)</span>}

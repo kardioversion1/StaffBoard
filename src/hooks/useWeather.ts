@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useStore } from '../store';
 import { WeatherState } from '../types';
-import { codeToCondition } from '../lib/weather';
+import { codeToCondition, convertTemp } from '../lib/weather';
 
 export function useWeather(): WeatherState {
   const settings = useStore((s) => s.settings);
@@ -19,22 +19,24 @@ export function useWeather(): WeatherState {
           `https://api.open-meteo.com/v1/forecast?latitude=${settings.weatherLat}&longitude=${settings.weatherLon}` +
           '&current=temperature_2m,weather_code' +
           '&daily=temperature_2m_max,temperature_2m_min' +
-          '&timezone=America%2FKentucky%2FLouisville&units=us';
+          '&timezone=America%2FKentucky%2FLouisville';
         fetch(url)
           .then((r) => r.json())
           .then((data) => {
             if (cancelled) return;
+            const currentC = data.current?.temperature_2m;
+            const highC = data.daily?.temperature_2m_max?.[0];
+            const lowC = data.daily?.temperature_2m_min?.[0];
             const w: WeatherState = {
               location:
                 settings.weatherLocationLabel || 'Jewish Hospital, Louisville',
-              tempF: data.current?.temperature_2m,
-              tempC:
-                data.current?.temperature_2m !== undefined
-                  ? ((data.current.temperature_2m - 32) * 5) / 9
-                  : undefined,
+              tempC: currentC,
+              tempF: convertTemp(currentC, 'F'),
               condition: codeToCondition(data.current?.weather_code),
-              highF: data.daily?.temperature_2m_max?.[0],
-              lowF: data.daily?.temperature_2m_min?.[0],
+              highC,
+              lowC,
+              highF: convertTemp(highC, 'F'),
+              lowF: convertTemp(lowC, 'F'),
               updatedAt: new Date().toISOString(),
             };
             setWeather(w);

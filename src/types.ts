@@ -125,6 +125,8 @@ export interface WeatherState {
   tempC?: number;
   tempF?: number;
   condition?: 'Clear' | 'Clouds' | 'Rain' | 'Snow' | 'Fog' | 'Wind' | 'Unknown';
+  highC?: number;
+  lowC?: number;
   highF?: number;
   lowF?: number;
   updatedAt?: string; // ISO
