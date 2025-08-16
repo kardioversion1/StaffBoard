@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
 import { displayName } from '../utils/name';
+import { searchNurses } from '../utils/search';
 
 interface Props {
   onOpenSettings: () => void;
@@ -15,19 +16,7 @@ const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode
   const view = useStore((s) => s.ui.view);
   const setUi = useStore((s) => s.setUi);
 
-  const results = query
-    ? nurses.filter((n) =>
-        [
-          displayName(n, 'full'),
-          n.rfNumber,
-          (n as any).hospitalId, // safe if you've added hospitalId to types
-          n.role,
-          n.notes,
-        ]
-          .filter(Boolean)
-          .some((f) => String(f).toLowerCase().includes(query.toLowerCase()))
-      )
-    : [];
+  const results = query ? searchNurses(nurses, query) : [];
 
   return (
     <header className={`topbar ${tvMode ? 'tv' : ''}`}>
