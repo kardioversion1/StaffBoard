@@ -27,6 +27,9 @@ body{background:var(--bg);color:var(--text);font-family:sans-serif;font-size:var
 .nurse-name{font-size:var(--f-lg);}
 .rf-number{font-size:var(--f);color:var(--muted);cursor:pointer;}
 .off-tag{font-size:12px;color:var(--warn);margin-left:4px;}
+.nurse-card .menu-btn{margin-left:4px;background:none;border:none;color:var(--text);cursor:pointer;}
+.nurse-menu{position:absolute;background:var(--panel);padding:10px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.3);z-index:50;}
+.nurse-menu .menu-header{margin-bottom:8px;}
 
 .topbar{position:sticky;top:0;background:var(--panel);display:flex;align-items:center;gap:10px;padding:10px;z-index:10;}
 .topbar .search{flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--control);color:var(--text);}

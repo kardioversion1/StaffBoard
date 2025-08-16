@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { v4 as uuid } from 'uuid';
 import { BoardState, Nurse, Zone, Settings, WeatherState, Role } from './types';
 import { addStaff, moveStaff, removeStaff } from './state/updates';
+import { generateTempHospitalId } from './state/ids';
 
 const now = Date.now();
 
@@ -61,18 +62,46 @@ export const useStore = create<Store>((set, get) => ({
   ...demoState,
 
   addNurse: (nurse, zoneId = 'unassigned') => {
-    const { state: next, id } = addStaff(get(), nurse, zoneId); // pure helper returns new state + id
+    const state = get();
+    const existing = new Set(
+      Object.values(state.nurses)
+        .map((n) => n.hospitalId)
+        .filter(Boolean) as string[]
+    );
+    let hospitalId = nurse.hospitalId;
+    if (hospitalId) {
+      if (!/^\d{4,10}$/.test(hospitalId)) throw new Error('Hospital ID must be 4-10 digits');
+      if (existing.has(hospitalId)) throw new Error('Hospital ID already in use');
+    } else {
+      hospitalId = generateTempHospitalId(existing);
+    }
+    const { state: next, id } = addStaff(state, { ...nurse, hospitalId }, zoneId); // pure helper returns new state + id
     set(next);
     return id;
   },
 
-  updateNurse: (id, data) =>
-    set((state) => ({
+  updateNurse: (id, data) => {
+    const state = get();
+    if ('hospitalId' in data) {
+      const hospitalId = data.hospitalId;
+      const existing = new Set(
+        Object.values(state.nurses)
+          .map((n) => n.hospitalId)
+          .filter(Boolean) as string[]
+      );
+      existing.delete(state.nurses[id]?.hospitalId!);
+      if (hospitalId) {
+        if (!/^\d{4,10}$/.test(hospitalId)) throw new Error('Hospital ID must be 4-10 digits');
+        if (existing.has(hospitalId)) throw new Error('Hospital ID already in use');
+      }
+    }
+    set({
       ...state,
       nurses: state.nurses[id]
         ? { ...state.nurses, [id]: { ...state.nurses[id], ...data } }
         : state.nurses,
-    })),
+    });
+  },
 
   moveNurse: (id, toZone, index) =>
     set((state) => moveStaff(state, id, toZone, index)), // pure, immutable

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
 import { displayName } from '../utils/name';
+import { searchNurses } from '../utils/search';
 
 interface Props {
   onOpenSettings: () => void;
@@ -12,13 +13,7 @@ interface Props {
 const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode, tvMode }) => {
   const [query, setQuery] = useState('');
   const nurses = useStore((s) => Object.values(s.nurses));
-  const results = query
-    ? nurses.filter((n) =>
-        [displayName(n, 'full'), n.rfNumber, n.role, n.notes]
-          .filter(Boolean)
-          .some((f) => f!.toLowerCase().includes(query.toLowerCase()))
-      )
-    : [];
+  const results = query ? searchNurses(nurses, query) : [];
 
   return (
     <header className={`topbar ${tvMode ? 'tv' : ''}`}>

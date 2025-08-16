@@ -17,6 +17,7 @@ export interface StaffBase {
   lastName: string;
   role: Role;
   rfNumber?: string;
+  hospitalId?: string;     // numeric string, e.g., "328343"
   notes?: string;
 }
 
