@@ -38,6 +38,52 @@ export interface ScheduledShift {
   zoneId?: string; // optional initial placement
 }
 
+export type PlannerView = 'day' | 'week';
+
+export interface CoverageTarget {
+  id: string;
+  date: string;              // ISO day
+  zoneId: string;            // 'charge'|'triage'|...
+  role: Role;                // RN, Tech, etc.
+  needed: number;            // target headcount
+}
+
+export interface Assignment {
+  id: string;
+  nurseId: string;
+  date: string;              // ISO day
+  zoneId: string;
+  start: string;             // ISO
+  end: string;               // ISO
+  dto?: boolean;
+}
+
+export interface Preference {
+  nurseId: string;
+  // soft constraints — optional
+  likesZones?: string[];
+  avoidZones?: string[];
+  preferDays?: ('Mon'|'Tue'|'Wed'|'Thu'|'Fri'|'Sat'|'Sun')[];
+}
+
+export interface RuleConfig {
+  minRestHours?: number;     // default 10
+  maxConsecutiveDays?: number; // default 4
+  forwardRotate?: boolean;   // prefer day→eve→night
+}
+
+export interface SwapRequest {
+  id: string;
+  fromAssignmentId: string;
+  toNurseId: string;
+  status: 'pending'|'approved'|'rejected'|'cancelled';
+}
+
+export interface HistoryEntry {
+  date: string;  start: string; end: string;
+  zoneId?: string; dto?: boolean;
+}
+
 export interface Zone {
   id: string;
   name: string;
@@ -90,10 +136,20 @@ export interface BoardState {
   ui: {
     density: 'compact' | 'comfortable';
     // runtime-only (not persisted or only partially)
-    view?: 'board' | 'settings' | 'shift';
+    view?: 'board' | 'settings' | 'shift' | 'planner';
     draggingNurseId?: string | null;
     dragTargetZoneId?: string | null;
     contextMenu?: { nurseId?: string; anchor?: DOMRect | null } | null;
   };
+  history: Record<string, HistoryEntry[]>;
+  coverage: CoverageTarget[];
+  assignments: Assignment[];
+  planner: {
+    view: PlannerView;
+    selectedDate: string;
+    ruleConfig: RuleConfig;
+    selfScheduleOpen?: boolean;
+  };
+  swapRequests?: SwapRequest[];
   version: number;
 }

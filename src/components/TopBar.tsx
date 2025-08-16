@@ -35,6 +35,12 @@ const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode
             Settings
           </button>
           <button
+            className={view === 'planner' ? 'active' : ''}
+            onClick={() => setUi({ view: 'planner' })}
+          >
+            Shift Planner
+          </button>
+          <button
             className={view === 'shift' ? 'active' : ''}
             onClick={() => setUi({ view: 'shift' })}
           >

@@ -33,3 +33,7 @@ Uses the [Open-Meteo](https://open-meteo.com/) API (no key) for live conditions.
 ## Hospital ID
 
 Each nurse can have a unique numeric Hospital ID. When adding a nurse without an ID, the app assigns a temporary 6-digit code. IDs must be 4–10 digits and unique across all staff. Edit IDs from Settings or the nurse menu; validation errors are shown inline.
+
+## Shift Planner (v2.6)
+
+An experimental planner for building daily or weekly coverage. Drag nurses into zone/role cells, review the last five assignments and publish days to append to history. Includes basic rule checks, optional self-scheduling windows and a lightweight swap request queue.
