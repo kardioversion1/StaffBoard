@@ -12,11 +12,12 @@ export type Role =
   | 'Other';
 
 export interface StaffBase {
-  id: string;
+  id: string;               // internal UUID
   firstName: string;
   lastName: string;
   role: Role;
-  rfNumber?: string;
+  rfNumber?: string;        // radio frequency / badge number (separate from hospitalId)
+  hospitalId?: string;      // numeric string, e.g. "328343"
   notes?: string;
 }
 
@@ -82,7 +83,13 @@ export interface BoardState {
   settings: Settings;
   weather: WeatherState;
   privacy: { mainBoardNameFormat: 'first-lastInitial' | 'full' };
-  ui: { density: 'compact' | 'comfortable' };
+  ui: {
+    density: 'compact' | 'comfortable';
+    // runtime-only (not persisted or only partially)
+    view?: 'board' | 'settings' | 'shift';
+    draggingNurseId?: string | null;
+    dragTargetZoneId?: string | null;
+    contextMenu?: { nurseId?: string; anchor?: DOMRect | null } | null;
+  };
   version: number;
 }
-
