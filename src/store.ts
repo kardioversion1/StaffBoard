@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { BoardState, Nurse, Zone, Settings, WeatherState, Role } from './types';
 import { v4 as uuid } from 'uuid';
+import { BoardState, Nurse, Zone, Settings, WeatherState, Role } from './types';
+import { addStaff, moveStaff, removeStaff } from './state/updates';
 
 const now = Date.now();
 
@@ -14,7 +14,7 @@ const demoState: BoardState = {
     { id: 'mainA', name: 'Main A', order: 4, nurseIds: ['n5', 'n6'] },
     { id: 'mainB', name: 'Main B', order: 5, nurseIds: ['n7'] },
     { id: 'hall', name: 'Hallway', order: 6, nurseIds: ['n8'] },
-    { id: 'obs', name: 'Obs', order: 7, nurseIds: ['n9', 'n10'] }
+    { id: 'obs', name: 'Obs', order: 7, nurseIds: ['n9', 'n10'] },
   ],
   nurses: {
     n1: { id: 'n1', firstName: 'Alice', lastName: 'Smith', rfNumber: '101', role: 'RN', status: 'active', offAt: new Date(now + 45 * 60000).toISOString() },
@@ -26,8 +26,9 @@ const demoState: BoardState = {
     n7: { id: 'n7', firstName: 'Grace', lastName: 'Taylor', role: 'RN', status: 'active', studentTag: 'S' },
     n8: { id: 'n8', firstName: 'Hank', lastName: 'Anderson', role: 'Tech', status: 'active' },
     n9: { id: 'n9', firstName: 'Ivy', lastName: 'Thomas', role: 'RN', status: 'active' },
-    n10:{ id: 'n10', firstName: 'John', lastName: 'Lee', role: 'Other', status: 'active' }
+    n10:{ id: 'n10', firstName: 'John', lastName: 'Lee', role: 'Other', status: 'active' },
   },
+  scheduledShifts: [],              // keep this; used by RightRail logic
   ancillary: [],
   settings: {
     theme: 'dark',
@@ -38,7 +39,7 @@ const demoState: BoardState = {
     autoPromoteIncoming: false,
     retainOffgoingMinutes: 30,
   },
-  weather: { location: '' },
+  weather: { location: '' } as WeatherState,
   privacy: { mainBoardNameFormat: 'first-lastInitial' },
   ui: { density: 'comfortable' },
   version: 1,
@@ -56,64 +57,51 @@ interface Store extends BoardState {
   addAncillary: (role: Role, names: string[], note?: string) => void;
 }
 
-export const useStore = create<Store>()(
-  persist(
-    (set, get) => ({
-      ...demoState,
-      addNurse: (nurse, zoneId = 'unassigned') => {
-        const id = nurse.id ?? uuid();
-        const n: Nurse = { status: 'active', ...nurse, id };
-        set((state) => {
-          state.nurses[id] = n;
-          const zone = state.zones.find((z) => z.id === zoneId);
-          zone?.nurseIds.push(id);
-        });
-        return id;
-      },
-      updateNurse: (id, data) =>
-        set((state) => {
-          state.nurses[id] = { ...state.nurses[id], ...data };
-        }),
-      moveNurse: (id, toZone, index) =>
-        set((state) => {
-          const fromZone = state.zones.find((z) => z.nurseIds.includes(id));
-          if (fromZone)
-            fromZone.nurseIds = fromZone.nurseIds.filter((nid) => nid !== id);
-          const zone = state.zones.find((z) => z.id === toZone);
-          if (zone) {
-            if (index === undefined) zone.nurseIds.push(id);
-            else zone.nurseIds.splice(index, 0, id);
-          }
-        }),
-      removeNurse: (id) =>
-        set((state) => {
-          delete state.nurses[id];
-          state.zones.forEach(
-            (z) => (z.nurseIds = z.nurseIds.filter((nid) => nid !== id))
-          );
-        }),
-      addZone: (name) =>
-        set((state) => {
-          const id = uuid();
-          state.zones.push({ id, name, order: state.zones.length, nurseIds: [] });
-        }),
-      updateZone: (id, data) =>
-        set((state) => {
-          const z = state.zones.find((z) => z.id === id);
-          if (z) Object.assign(z, data);
-        }),
-      updateSettings: (data) =>
-        set((state) => ({ settings: { ...state.settings, ...data } })),
-      setWeather: (w) => set((state) => ({ weather: { ...state.weather, ...w } })),
-      addAncillary: (role, names, note) =>
-        set((state) => {
-          state.ancillary.push({ id: uuid(), role, names, note });
-        }),
-    }),
-    {
-      name: 'staffboard',
-      version: 2,
-      migrate: (state) => state as BoardState,
-    }
-  )
-);
+export const useStore = create<Store>((set, get) => ({
+  ...demoState,
+
+  addNurse: (nurse, zoneId = 'unassigned') => {
+    const { state: next, id } = addStaff(get(), nurse, zoneId); // pure helper returns new state + id
+    set(next);
+    return id;
+  },
+
+  updateNurse: (id, data) =>
+    set((state) => ({
+      ...state,
+      nurses: state.nurses[id]
+        ? { ...state.nurses, [id]: { ...state.nurses[id], ...data } }
+        : state.nurses,
+    })),
+
+  moveNurse: (id, toZone, index) =>
+    set((state) => moveStaff(state, id, toZone, index)), // pure, immutable
+
+  removeNurse: (id) =>
+    set((state) => removeStaff(state, id)), // pure, cleans zone refs
+
+  addZone: (name) =>
+    set((state) => ({
+      ...state,
+      zones: [...state.zones, { id: uuid(), name, order: state.zones.length, nurseIds: [] }],
+    })),
+
+  updateZone: (id, data) =>
+    set((state) => ({
+      ...state,
+      zones: state.zones.map((z) => (z.id === id ? { ...z, ...data } : z)),
+    })),
+
+  updateSettings: (data) =>
+    set((state) => ({ ...state, settings: { ...state.settings, ...data } })),
+
+  setWeather: (w) =>
+    set((state) => ({ ...state, weather: { ...state.weather, ...w } })),
+
+  addAncillary: (role, names, note) =>
+    set((state) => ({
+      ...state,
+      ancillary: [...state.ancillary, { id: uuid(), role, names, note }],
+    })),
+}));
+

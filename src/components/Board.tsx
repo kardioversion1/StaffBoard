@@ -20,10 +20,18 @@ const Board: React.FC = () => {
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={({ active, over }) => {
-        if (!over) return;
-        const toZone = over.data.current?.zoneId;
-        const index = over.data.current?.index;
-        if (toZone) moveNurse(active.id as string, toZone, index);
+        try {
+          if (!over) return;
+          const toZone = over.data.current?.zoneId;
+          const index = over.data.current?.index;
+          if (!toZone) {
+            console.warn('Invalid drop', { over });
+            return;
+          }
+          moveNurse(active.id as string, toZone, index);
+        } catch (e) {
+          console.error('[StaffBoard]', { phase: 'dragDrop', error: e });
+        }
       }}
     >
       <div className="board">

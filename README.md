@@ -20,4 +20,5 @@ npm run build
 - Use the ⚙️ button to manage staff and zones.
 - Theme toggle (🌓) persists across sessions.
 - Search by name, RF number, role or notes from the top bar.
-- Export/Import data via browser dev tools using localStorage key `staffboard`.
+- Export/Import data via browser dev tools using localStorage key `staffboard_v2`.
+- If the app crashes, an overlay offers **Reload** or **Reset Local Data** (clears `staffboard_v2`).
