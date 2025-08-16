@@ -5,6 +5,7 @@ import { Nurse } from '../types';
 import { displayName } from '../utils/name';
 import { offAtLabel, shouldShowOffAt } from '../utils/time';
 import { useStore } from '../store';
+import NurseMenu from './NurseMenu';
 
 interface Props {
   nurse: Nurse;
@@ -26,6 +27,7 @@ const NurseCard: React.FC<Props> = ({ nurse, zoneId, index }) => {
 
   const [editingRF, setEditingRF] = useState(false);
   const [rfValue, setRfValue] = useState(nurse.rfNumber || '');
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const saveRf = () => {
     updateNurse(nurse.id, { rfNumber: rfValue });
@@ -37,6 +39,14 @@ const NurseCard: React.FC<Props> = ({ nurse, zoneId, index }) => {
       ref={setNodeRef}
       style={style}
       className={`nurse-card ${isDragging ? 'dragging' : ''}`}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        useStore.getState().setUi({ contextMenu: { nurseId: nurse.id, anchor: e.currentTarget.getBoundingClientRect() } });
+      }}
+      onClick={(e) => {
+        if (e.altKey) return; // allow alt+click for other features
+        useStore.getState().setUi({ contextMenu: { nurseId: nurse.id, anchor: e.currentTarget.getBoundingClientRect() } });
+      }}
       {...attributes}
       {...listeners}
     >
@@ -56,7 +66,23 @@ const NurseCard: React.FC<Props> = ({ nurse, zoneId, index }) => {
         ) : (
           <span onClick={() => setEditingRF(true)}>{nurse.rfNumber || 'RF #'}</span>
         )}
+        <button className="menu-btn" onClick={() => setMenuOpen(true)}>
+          ⋮
+        </button>
       </div>
+      {menuOpen && (
+        <NurseMenu
+          nurse={nurse}
+          onClose={() => setMenuOpen(false)}
+          onChangeHospitalId={(val) => {
+            try {
+              updateNurse(nurse.id, { hospitalId: val || undefined });
+            } catch (err) {
+              alert((err as Error).message);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

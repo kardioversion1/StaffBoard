@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
 import { displayName } from '../utils/name';
+import { searchNurses } from '../utils/search';
 
 interface Props {
   onOpenSettings: () => void;
@@ -12,17 +13,38 @@ interface Props {
 const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode, tvMode }) => {
   const [query, setQuery] = useState('');
   const nurses = useStore((s) => Object.values(s.nurses));
-  const results = query
-    ? nurses.filter((n) =>
-        [displayName(n, 'full'), n.rfNumber, n.role, n.notes]
-          .filter(Boolean)
-          .some((f) => f!.toLowerCase().includes(query.toLowerCase()))
-      )
-    : [];
+  const view = useStore((s) => s.ui.view);
+  const setUi = useStore((s) => s.setUi);
+
+  const results = query ? searchNurses(nurses, query) : [];
 
   return (
     <header className={`topbar ${tvMode ? 'tv' : ''}`}>
+      {!tvMode && (
+        <nav className="nav-tabs">
+          <button
+            className={view === 'board' ? 'active' : ''}
+            onClick={() => setUi({ view: 'board' })}
+          >
+            Board
+          </button>
+          <button
+            className={view === 'settings' ? 'active' : ''}
+            onClick={() => setUi({ view: 'settings' })}
+          >
+            Settings
+          </button>
+          <button
+            className={view === 'shift' ? 'active' : ''}
+            onClick={() => setUi({ view: 'shift' })}
+          >
+            Shift Builder
+          </button>
+        </nav>
+      )}
+
       {!tvMode && <button onClick={onOpenSettings}>⚙️</button>}
+
       {!tvMode && (
         <input
           className="search"
@@ -31,8 +53,10 @@ const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode
           onChange={(e) => setQuery(e.target.value)}
         />
       )}
+
       <button onClick={onToggleTheme}>🌓</button>
       <button onClick={onToggleTvMode}>{tvMode ? '↩️' : '📺'}</button>
+
       {!tvMode && query && (
         <div className="search-results">
           {results.map((n) => (
