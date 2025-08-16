@@ -16,13 +16,18 @@ const base: BoardState = {
     showSeconds: true,
     clock24h: false,
     weatherEnabled: false,
+    weatherProvider: 'open-meteo',
+    weatherLocationLabel: 'Jewish Hospital, Louisville',
+    weatherLat: 0,
+    weatherLon: 0,
+    weatherRefreshMinutes: 10,
     autoPromoteIncoming: false,
     retainOffgoingMinutes: 30,
   },
   weather: { location: '' },
   privacy: { mainBoardNameFormat: 'first-lastInitial' },
   ui: { density: 'comfortable' },
-  version: 1,
+  version: 2,
 };
 
 describe('updates', () => {

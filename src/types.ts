@@ -52,8 +52,12 @@ export interface Settings {
   showSeconds: boolean;
   clock24h: boolean;
   weatherEnabled: boolean;
+  weatherProvider?: 'open-meteo' | 'custom';
+  weatherLocationLabel?: string;        // default "Jewish Hospital, Louisville"
+  weatherLat?: number;                  // default 38.2473
+  weatherLon?: number;                  // default -85.7579
+  weatherRefreshMinutes?: number;       // default 10
   weatherEndpoint?: string;
-  weatherLocationLabel?: string;
   autoPromoteIncoming: boolean;
   retainOffgoingMinutes: number;
 }

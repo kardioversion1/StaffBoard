@@ -51,7 +51,7 @@ interface Store extends Omit<BoardState, 'ui'> {
   setBreakAction: (id: string, on: boolean, coverId?: string) => void;
 }
 
-const demoState: Omit<Store, keyof Store> & BoardState = {
+const demoState: BoardState = {
   zones: [
     { id: 'unassigned', name: 'Unassigned', order: 0, nurseIds: ['n1', 'n2'] },
     { id: 'triage', name: 'Triage', order: 1, nurseIds: ['n3'] },
@@ -96,20 +96,27 @@ const demoState: Omit<Store, keyof Store> & BoardState = {
     tvMode: false,
     showSeconds: true,
     clock24h: false,
-    weatherEnabled: false,
+    weatherEnabled: true,
+    // The following fields are used by the live weather feature. If your Settings
+    // type doesn’t include them yet, add them there, or keep this `as any`.
+    weatherProvider: 'open-meteo',
+    weatherLocationLabel: 'Jewish Hospital, Louisville',
+    weatherLat: 38.2473,
+    weatherLon: -85.7579,
+    weatherRefreshMinutes: 10,
     autoPromoteIncoming: false,
     retainOffgoingMinutes: 30,
-  },
-  weather: { location: '' } as WeatherState,
+  } as any,
+  weather: { location: 'Jewish Hospital, Louisville' } as WeatherState,
   privacy: { mainBoardNameFormat: 'first-lastInitial' },
-  // We'll fill ui via the Store default below
-  ui: { density: 'comfortable' } as any,
-  version: 1,
-} as unknown as BoardState;
+  ui: { density: 'comfortable' }, // enriched below in the store init
+  version: 2,
+};
 
 export const useStore = create<Store>((set, get) => ({
   ...demoState,
-  // enrich UI defaults
+
+  // enrich UI defaults at runtime
   ui: {
     density: 'comfortable',
     view: 'board',
