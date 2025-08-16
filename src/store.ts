@@ -242,7 +242,7 @@ export const useStore = create<Store>((set, get) => ({
     }
 
     const { state: next, id } = addStaff(state, { ...nurse, hospitalId }, zoneId);
-    set(next);
+    set(next as any);
     return id;
   },
 

@@ -16,7 +16,7 @@ export function addStaff(
     console.warn('addStaff: invalid zone', { zoneId });
     return { state, id };
   }
-  const newNurse: Nurse = { status: 'active', ...nurse, id };
+  const newNurse: Nurse = { id, ...nurse, status: nurse.status ?? 'active' };
   return {
     state: {
       ...state,
