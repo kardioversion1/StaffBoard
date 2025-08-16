@@ -1,7 +1,7 @@
 import { BoardState } from '../types';
 import { ensurePinnedZones } from '../state/zones';
 
-export const STORAGE_KEY = 'staffboard_v3';
+export const STORAGE_KEY = 'staffboard_v4';
 
 export type PersistedState = {
   version: number;
@@ -9,7 +9,7 @@ export type PersistedState = {
   updatedAt: string;
 };
 
-const CURRENT_VERSION = 3;
+const CURRENT_VERSION = 4;
 
 function isValid(obj: any): obj is PersistedState {
   return obj && typeof obj === 'object' && typeof obj.version === 'number' && obj.board;
@@ -53,7 +53,7 @@ export function safeSave(state: PersistedState): boolean {
 function migrate(old: PersistedState): PersistedState | null {
   try {
     if (old.version === 1) {
-      const board = { ...old.board, version: 2 } as BoardState;
+      let board = { ...old.board, version: 4 } as BoardState;
       const s: any = board.settings || {};
       if (typeof s.weatherEnabled === 'undefined') {
         s.weatherEnabled = false;
@@ -64,7 +64,9 @@ function migrate(old: PersistedState): PersistedState | null {
         if (s.weatherLon === undefined) s.weatherLon = -85.7579;
         if (s.weatherRefreshMinutes === undefined) s.weatherRefreshMinutes = 10;
       }
+      if (s.weatherUnit === undefined) s.weatherUnit = 'F';
       board.settings = s;
+      board = ensurePinnedZones(board);
       return { version: CURRENT_VERSION, board, updatedAt: old.updatedAt };
     }
     if (old.version === 2) {
@@ -77,6 +79,18 @@ function migrate(old: PersistedState): PersistedState | null {
         ])
       );
       board.history = board.history || {};
+      const s: any = board.settings || {};
+      if (s.weatherUnit === undefined) s.weatherUnit = 'F';
+      board.settings = s;
+      board = ensurePinnedZones(board);
+      board.version = 4;
+      return { version: CURRENT_VERSION, board, updatedAt: old.updatedAt };
+    }
+    if (old.version === 3) {
+      let board = { ...old.board, version: 4 } as BoardState;
+      const s: any = board.settings || {};
+      if (s.weatherUnit === undefined) s.weatherUnit = 'F';
+      board.settings = s;
       board = ensurePinnedZones(board);
       return { version: CURRENT_VERSION, board, updatedAt: old.updatedAt };
     }

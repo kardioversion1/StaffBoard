@@ -1,5 +1,7 @@
 import { WeatherState } from '../types';
 
+export type TempUnit = 'F' | 'C';
+
 /** Map Open-Meteo weather codes to coarse conditions */
 export function codeToCondition(code: number): WeatherState['condition'] {
   if ([0].includes(code)) return 'Clear';
@@ -31,5 +33,16 @@ export function conditionIcon(c: WeatherState['condition']): string {
     default:
       return '❔';
   }
+}
+
+export function convertTemp(tempF: number | undefined, unit: TempUnit): number | undefined {
+  if (tempF === undefined) return undefined;
+  return unit === 'F' ? tempF : ((tempF - 32) * 5) / 9;
+}
+
+export function formatTemp(tempF: number | undefined, unit: TempUnit): string {
+  const t = convertTemp(tempF, unit);
+  if (t === undefined) return '';
+  return `${Math.round(t)}°${unit}`;
 }
 

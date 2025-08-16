@@ -28,6 +28,7 @@ const Settings: React.FC<Props> = ({ onClose }) => {
     lat: settings.weatherLat ?? 38.2473,
     lon: settings.weatherLon ?? -85.7579,
     refresh: settings.weatherRefreshMinutes ?? 10,
+    unit: settings.weatherUnit || 'F',
     endpoint: settings.weatherEndpoint || '',
   });
   const [weatherError, setWeatherError] = useState<string | null>(null);
@@ -149,6 +150,31 @@ const Settings: React.FC<Props> = ({ onClose }) => {
             Custom JSON URL
           </label>
         </div>
+        <div>
+          Units:
+          <label>
+            <input
+              type="radio"
+              value="F"
+              checked={weatherDraft.unit === 'F'}
+              onChange={(e) =>
+                setWeatherDraft({ ...weatherDraft, unit: e.target.value as 'F' | 'C' })
+              }
+            />{' '}
+            Fahrenheit
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="C"
+              checked={weatherDraft.unit === 'C'}
+              onChange={(e) =>
+                setWeatherDraft({ ...weatherDraft, unit: e.target.value as 'F' | 'C' })
+              }
+            />{' '}
+            Celsius
+          </label>
+        </div>
         {weatherDraft.provider === 'custom' && (
           <input
             placeholder="Endpoint URL"
@@ -214,6 +240,7 @@ const Settings: React.FC<Props> = ({ onClose }) => {
               weatherLat: weatherDraft.lat,
               weatherLon: weatherDraft.lon,
               weatherRefreshMinutes: weatherDraft.refresh,
+              weatherUnit: weatherDraft.unit as 'F' | 'C',
               weatherEndpoint:
                 weatherDraft.provider === 'custom'
                   ? weatherDraft.endpoint

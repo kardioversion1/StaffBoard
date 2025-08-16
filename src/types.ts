@@ -115,6 +115,7 @@ export interface Settings {
   weatherLon?: number;                  // default -85.7579
   weatherRefreshMinutes?: number;       // default 10
   weatherEndpoint?: string;
+  weatherUnit?: 'F' | 'C';              // Fahrenheit or Celsius
   autoPromoteIncoming: boolean;
   retainOffgoingMinutes: number;
 }
