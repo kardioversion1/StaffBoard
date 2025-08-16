@@ -10,6 +10,7 @@ import { safeLoad, safeSave } from './lib/storage';
 import NurseMenu from './components/NurseMenu';
 import SettingsStaff from './pages/SettingsStaff';
 import ShiftBuilder from './pages/ShiftBuilder';
+import ShiftPlanner from './pages/ShiftPlanner';
 
 const App: React.FC = () => {
   const settings = useStore((s) => s.settings);
@@ -107,6 +108,7 @@ const App: React.FC = () => {
           </div>
         )}
         {view === 'settings' && <SettingsStaff />}
+        {view === 'planner' && <ShiftPlanner />}
         {view === 'shift' && <ShiftBuilder />}
 
         {showSettings && <Settings onClose={() => setShowSettings(false)} />}

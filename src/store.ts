@@ -7,6 +7,9 @@ import {
   Settings,
   WeatherState,
   Role,
+  Assignment,
+  CoverageTarget,
+  SwapRequest,
   HistoryEntry,
 } from './types';
 import {
@@ -26,7 +29,7 @@ import { ensurePinnedZones } from './state/zones';
 const now = Date.now();
 
 /** Local UI shape extends BoardState.ui to include runtime-only fields */
-type UiView = 'board' | 'settings' | 'shift';
+type UiView = 'board' | 'settings' | 'shift' | 'planner';
 interface UiState {
   density: 'compact' | 'comfortable';
   view: UiView;
@@ -52,6 +55,19 @@ interface Store extends Omit<BoardState, 'ui'> {
   addAncillary: (role: Role, names: string[], note?: string) => void;
 
   setUi: (ui: Partial<UiState>) => void;
+
+  // Planner actions
+  addCoverage: (target: Omit<CoverageTarget, 'id'>) => string;
+  setCoverage: (id: string, partial: Partial<CoverageTarget>) => void;
+  removeCoverage: (id: string) => void;
+
+  assignNurse: (input: Omit<Assignment, 'id'>) => string;
+  unassign: (assignmentId: string) => void;
+  setPlanner: (partial: Partial<BoardState['planner']>) => void;
+
+  requestSwap: (aid: string, toNurseId: string) => string;
+  setSwapStatus: (id: string, status: SwapRequest['status']) => void;
+  publishDay: (dateISO: string) => void;
 
   // Nurse menu actions
   markOffAction: (id: string) => void;
@@ -181,6 +197,18 @@ const demoState: BoardState = ensurePinnedZones({
   privacy: { mainBoardNameFormat: 'first-lastInitial' },
   history: {},
   ui: { density: 'comfortable' }, // enriched below in the store init
+
+  // Planner-related slices (keep if present in BoardState)
+  coverage: [],
+  assignments: [],
+  planner: {
+    view: 'week',
+    selectedDate: new Date().toISOString().slice(0, 10),
+    ruleConfig: { minRestHours: 10, maxConsecutiveDays: 4, forwardRotate: true },
+    selfScheduleOpen: false,
+  },
+  swapRequests: [],
+
   version: 3,
 });
 
@@ -276,6 +304,74 @@ export const useStore = create<Store>((set, get) => ({
       ui: { ...state.ui, ...ui },
     })),
 
+  addCoverage: (target) => {
+    const id = uuid();
+    set((state) => ({ ...state, coverage: [...state.coverage, { ...target, id }] }));
+    return id;
+  },
+
+  setCoverage: (id, partial) =>
+    set((state) => ({
+      ...state,
+      coverage: state.coverage.map((c) => (c.id === id ? { ...c, ...partial } : c)),
+    })),
+
+  removeCoverage: (id) =>
+    set((state) => ({
+      ...state,
+      coverage: state.coverage.filter((c) => c.id !== id),
+    })),
+
+  assignNurse: (input) => {
+    const id = uuid();
+    set((state) => ({
+      ...state,
+      assignments: [...state.assignments, { ...input, id }],
+    }));
+    return id;
+  },
+
+  unassign: (assignmentId) =>
+    set((state) => ({
+      ...state,
+      assignments: state.assignments.filter((a) => a.id !== assignmentId),
+    })),
+
+  setPlanner: (partial) =>
+    set((state) => ({
+      ...state,
+      planner: { ...state.planner, ...partial },
+    })),
+
+  requestSwap: (aid, toNurseId) => {
+    const id = uuid();
+    const swap: SwapRequest = { id, fromAssignmentId: aid, toNurseId, status: 'pending' };
+    set((state) => ({ ...state, swapRequests: [...state.swapRequests, swap] }));
+    return id;
+  },
+
+  setSwapStatus: (id, status) =>
+    set((state) => ({
+      ...state,
+      swapRequests: state.swapRequests.map((s) => (s.id === id ? { ...s, status } : s)),
+    })),
+
+  publishDay: (dateISO) =>
+    set((state) => {
+      const history = { ...state.history };
+      const remaining: Assignment[] = [];
+      state.assignments.forEach((a) => {
+        if (a.date === dateISO) {
+          const list = history[a.nurseId] ?? [];
+          list.unshift({ date: a.date, start: a.start, end: a.end, zoneId: a.zoneId, dto: a.dto });
+          history[a.nurseId] = list.slice(0, 50);
+        } else {
+          remaining.push(a);
+        }
+      });
+      return { ...state, history, assignments: remaining };
+    }),
+
   // Nurse menu actions
   markOffAction: (nid) =>
     set((state) => {
@@ -294,5 +390,5 @@ export const useStore = create<Store>((set, get) => ({
   setRfAction: (nid, rf) => set((state) => setRf(state, nid, rf) as any),
   setStudentTagAction: (nid, tag) => set((state) => setStudentTag(state, nid, tag) as any),
   setShiftEndAction: (nid, iso) => set((state) => setShiftEnd(state, nid, iso) as any),
-  setBreakAction: (nid, on, cover) => set((state) => setBreak(state, nid, on, cover) as any),
+  setBreakAction: (nid, on, coverId) => set((state) => setBreak(state, nid, on, coverId) as any),
 }));
