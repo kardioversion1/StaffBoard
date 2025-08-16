@@ -12,7 +12,16 @@ import ZoneColumn from './ZoneColumn';
 import { useStore } from '../store';
 
 const Board: React.FC = () => {
-  const zones = useStore((s) => [...s.zones].sort((a, b) => a.order - b.order));
+  const zones = useStore((s) => {
+    const arr = [...s.zones];
+    const order = (z: any) =>
+      z.id === 'charge' || z.name === 'Charge'
+        ? -2
+        : z.id === 'triage' || z.name === 'Triage'
+        ? -1
+        : z.order;
+    return arr.sort((a, b) => order(a) - order(b));
+  });
   const moveNurse = useStore((s) => s.moveNurse);
   const setUi = useStore((s) => s.setUi);
 

@@ -1,6 +1,7 @@
 import { BoardState } from '../types';
+import { ensurePinnedZones } from '../state/zones';
 
-export const STORAGE_KEY = 'staffboard_v2';
+export const STORAGE_KEY = 'staffboard_v3';
 
 export type PersistedState = {
   version: number;
@@ -8,7 +9,7 @@ export type PersistedState = {
   updatedAt: string;
 };
 
-const CURRENT_VERSION = 2;
+const CURRENT_VERSION = 3;
 
 function isValid(obj: any): obj is PersistedState {
   return obj && typeof obj === 'object' && typeof obj.version === 'number' && obj.board;
@@ -64,6 +65,19 @@ function migrate(old: PersistedState): PersistedState | null {
         if (s.weatherRefreshMinutes === undefined) s.weatherRefreshMinutes = 10;
       }
       board.settings = s;
+      return { version: CURRENT_VERSION, board, updatedAt: old.updatedAt };
+    }
+    if (old.version === 2) {
+      let board = { ...old.board, version: 3 } as BoardState;
+      // ensure employmentType and history
+      board.nurses = Object.fromEntries(
+        Object.entries(board.nurses).map(([id, n]) => [
+          id,
+          { ...n, employmentType: n.employmentType || 'home' },
+        ])
+      );
+      board.history = board.history || {};
+      board = ensurePinnedZones(board);
       return { version: CURRENT_VERSION, board, updatedAt: old.updatedAt };
     }
     return { ...old, version: CURRENT_VERSION };

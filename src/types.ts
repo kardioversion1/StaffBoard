@@ -21,14 +21,25 @@ export interface StaffBase {
   notes?: string;
 }
 
+export type EmploymentType = 'home' | 'float' | 'travel' | 'other';
+
 export interface Nurse extends StaffBase {
   status: 'active' | 'off';
+  employmentType?: EmploymentType;
   studentTag?: string | null;
   /** Preferred new fields */
   shiftStart?: string | null; // ISO
   shiftEnd?: string | null;   // ISO
   /** Legacy field kept for backward compat with older saves */
   offAt?: string | null;      // ISO legacy
+}
+
+export interface HistoryEntry {
+  date: string;        // ISO (shift start date)
+  start: string;       // ISO
+  end: string;         // ISO
+  zoneId?: string;
+  dto?: boolean;       // marked off / DTO in that shift
 }
 
 export interface ScheduledShift {
@@ -87,6 +98,7 @@ export interface BoardState {
   settings: Settings;
   weather: WeatherState;
   privacy: { mainBoardNameFormat: 'first-lastInitial' | 'full' };
+  history: Record<string, HistoryEntry[]>;
   ui: {
     density: 'compact' | 'comfortable';
     // runtime-only (not persisted or only partially)
