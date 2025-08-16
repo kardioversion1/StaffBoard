@@ -190,6 +190,7 @@ const demoState: BoardState = ensurePinnedZones({
     weatherLat: 38.2473,
     weatherLon: -85.7579,
     weatherRefreshMinutes: 10,
+    weatherUnit: 'F',
     autoPromoteIncoming: false,
     retainOffgoingMinutes: 30,
   } as any,
@@ -209,7 +210,7 @@ const demoState: BoardState = ensurePinnedZones({
   },
   swapRequests: [],
 
-  version: 3,
+  version: 4,
 });
 
 export const useStore = create<Store>((set, get) => ({

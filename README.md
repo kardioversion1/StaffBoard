@@ -34,8 +34,8 @@ Uses the [Open-Meteo](https://open-meteo.com/) API (no key) for live conditions.
 - Theme toggle (🌓) persists across sessions.
 - Search by name, RF number, role or notes from the top bar.
 - Search by name, Hospital ID, RF number, role or notes from the top bar.
-- Export/Import data via browser dev tools using localStorage key `staffboard_v3`.
-- If the app crashes, an overlay offers **Reload** or **Reset Local Data** (clears `staffboard_v3`).
+- Export/Import data via browser dev tools using localStorage key `staffboard_v4`.
+- If the app crashes, an overlay offers **Reload** or **Reset Local Data** (clears `staffboard_v4`).
 
 ## Hospital ID
 
@@ -44,3 +44,7 @@ Each nurse can have a unique numeric Hospital ID. When adding a nurse without an
 ## Shift Planner (v2.6)
 
 An experimental planner for building daily or weekly coverage. Drag nurses into zone/role cells, review the last five assignments and publish days to append to history. Includes basic rule checks, optional self-scheduling windows and a lightweight swap request queue.
+
+## Planner and Settings
+
+Use the Planner tab to drag nurses into zone/time slots and adjust DTO flags before publishing to history. The Settings panel manages nurse records and visual preferences, including a Fahrenheit/Celsius toggle that updates all weather displays.

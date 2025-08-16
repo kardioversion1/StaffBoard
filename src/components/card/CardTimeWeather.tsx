@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStore } from '../../store';
 import { useWeather } from '../../hooks/useWeather';
-import { conditionIcon } from '../../lib/weather';
+import { conditionIcon, formatTemp } from '../../lib/weather';
 
 const pad = (n: number) => n.toString().padStart(2, '0');
 
@@ -47,12 +47,12 @@ const CardTimeWeather: React.FC = () => {
             <div className="loc">{weather.location}</div>
             <div className="current">
               <span className="icon">{conditionIcon(weather.condition)}</span>
-              <span className="temp">{Math.round(weather.tempF)}&deg;F</span>
+              <span className="temp">{formatTemp(weather.tempF, settings.weatherUnit || 'F')}</span>
               <span className="cond">{weather.condition}</span>
             </div>
             {weather.highF !== undefined && weather.lowF !== undefined && (
               <div className="range">
-                H {Math.round(weather.highF)}&deg; / L {Math.round(weather.lowF)}&deg;
+                H {formatTemp(weather.highF, settings.weatherUnit || 'F')} / L {formatTemp(weather.lowF, settings.weatherUnit || 'F')}
               </div>
             )}
             {updatedStr && (
