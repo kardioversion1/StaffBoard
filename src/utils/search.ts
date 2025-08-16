@@ -12,7 +12,11 @@ export function searchNurses(nurses: Nurse[], query: string): Nurse[] {
       n.hospitalId,
       n.rfNumber,
       n.role,
+      n.employmentType,
       n.notes,
+      (n.notes || '').includes('[BREAK') ? 'break' : '',
+      n.studentTag ? 'student' : '',
+      n.status === 'off' ? 'dto' : '',
     ]
       .filter(Boolean)
       .map((f) => f!.toString().toLowerCase());

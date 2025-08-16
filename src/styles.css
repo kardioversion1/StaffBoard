@@ -27,17 +27,24 @@ body{background:var(--bg);color:var(--text);font-family:sans-serif;font-size:var
 .topbar.tv .search{display:none;}
 .topbar.tv button:first-child{display:none;}
 
-.board{display:flex;gap:var(--gap);padding:var(--gap);overflow-x:auto;height:100%;}
-.zone{background:var(--panel);padding:var(--gap);border-radius:var(--radius);min-width:220px;flex:0 0 auto;}
+.board{display:grid;grid-auto-flow:column;grid-template-rows:repeat(3,1fr);gap:var(--gap);padding:var(--gap);height:100%;overflow:hidden;}
+.zone{background:var(--panel);border-radius:var(--radius);width:360px;height:calc((100% - (2 * var(--gap))) / 3);display:flex;flex-direction:column;padding:12px;}
+.zone-body{overflow:auto;display:grid;gap:8px;grid-auto-rows:minmax(44px,auto);}
 .zone--dropTarget{outline:2px dashed var(--accent);box-shadow:0 0 0 3px color-mix(in oklab,var(--accent) 30%, transparent);}
 .zone-title{margin-top:0;font-size:var(--f-lg);}
 
-.nurse-card{background:var(--control);border-radius:var(--radius);padding:10px;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,0.3);cursor:grab;}
+.nurse-card{background:var(--control);border-radius:var(--radius);padding:8px;min-height:44px;box-shadow:0 1px 2px rgba(0,0,0,0.3);cursor:grab;display:flex;flex-direction:column;}
 .nurse-card.dragging{opacity:0.5;box-shadow:0 0 0 3px var(--accent);}
 .nurse-name{font-size:var(--f-lg);}
 .rf-number{font-size:var(--f);color:var(--muted);cursor:pointer;}
 .off-tag{font-size:12px;color:var(--warn);margin-left:4px;}
 .nurse-card .menu-btn{margin-left:4px;background:none;border:none;color:var(--text);cursor:pointer;}
+.nurse-card .badges{display:inline-flex;gap:6px;margin-left:6px;vertical-align:middle;}
+.badge{font-size:12px;padding:2px 6px;border-radius:999px;background:var(--control);color:var(--muted);}
+.badge--break{background:color-mix(in oklab,var(--warn) 25%, var(--control));}
+.badge--student{background:color-mix(in oklab,var(--accent) 25%, var(--control));}
+.badge--dto{background:color-mix(in oklab,var(--danger) 25%, var(--control));}
+.employment-icon{margin-right:4px;}
 .nurse-menu{position:absolute;background:var(--panel);padding:10px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.3);z-index:50;}
 .nurse-menu .menu-header{margin-bottom:8px;}
 

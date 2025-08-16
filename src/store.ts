@@ -10,6 +10,7 @@ import {
   Assignment,
   CoverageTarget,
   SwapRequest,
+  HistoryEntry,
 } from './types';
 import {
   addStaff,
@@ -22,6 +23,8 @@ import {
   setBreak,
 } from './state/updates';
 import { generateTempHospitalId } from './state/ids';
+import { pushHistory } from './state/history';
+import { ensurePinnedZones } from './state/zones';
 
 const now = Date.now();
 
@@ -74,7 +77,7 @@ interface Store extends Omit<BoardState, 'ui'> {
   setBreakAction: (id: string, on: boolean, coverId?: string) => void;
 }
 
-const demoState: BoardState = {
+const demoState: BoardState = ensurePinnedZones({
   zones: [
     { id: 'unassigned', name: 'Unassigned', order: 0, nurseIds: ['n1', 'n2'] },
     { id: 'triage', name: 'Triage', order: 1, nurseIds: ['n3'] },
@@ -93,24 +96,84 @@ const demoState: BoardState = {
       rfNumber: '101',
       role: 'RN',
       status: 'active',
+      employmentType: 'home',
       offAt: new Date(now + 45 * 60000).toISOString(),
     },
-    n2: { id: 'n2', firstName: 'Bob', lastName: 'Jones', role: 'RN', status: 'active' },
-    n3: { id: 'n3', firstName: 'Carla', lastName: 'White', role: 'RN', status: 'active', studentTag: 'S' },
-    n4: { id: 'n4', firstName: 'Dan', lastName: 'Brown', role: 'Charge RN', status: 'active' },
+    n2: {
+      id: 'n2',
+      firstName: 'Bob',
+      lastName: 'Jones',
+      role: 'RN',
+      status: 'active',
+      employmentType: 'home',
+    },
+    n3: {
+      id: 'n3',
+      firstName: 'Carla',
+      lastName: 'White',
+      role: 'RN',
+      status: 'active',
+      studentTag: 'S',
+      employmentType: 'home',
+    },
+    n4: {
+      id: 'n4',
+      firstName: 'Dan',
+      lastName: 'Brown',
+      role: 'Charge RN',
+      status: 'active',
+      employmentType: 'home',
+    },
     n5: {
       id: 'n5',
       firstName: 'Eve',
       lastName: 'Miller',
       role: 'Tech',
       status: 'active',
+      employmentType: 'home',
       offAt: new Date(now + 30 * 60000).toISOString(),
     },
-    n6: { id: 'n6', firstName: 'Frank', lastName: 'Wilson', role: 'RN', status: 'active' },
-    n7: { id: 'n7', firstName: 'Grace', lastName: 'Taylor', role: 'RN', status: 'active', studentTag: 'S' },
-    n8: { id: 'n8', firstName: 'Hank', lastName: 'Anderson', role: 'Tech', status: 'active' },
-    n9: { id: 'n9', firstName: 'Ivy', lastName: 'Thomas', role: 'RN', status: 'active' },
-    n10: { id: 'n10', firstName: 'John', lastName: 'Lee', role: 'Other', status: 'active' },
+    n6: {
+      id: 'n6',
+      firstName: 'Frank',
+      lastName: 'Wilson',
+      role: 'RN',
+      status: 'active',
+      employmentType: 'home',
+    },
+    n7: {
+      id: 'n7',
+      firstName: 'Grace',
+      lastName: 'Taylor',
+      role: 'RN',
+      status: 'active',
+      studentTag: 'S',
+      employmentType: 'home',
+    },
+    n8: {
+      id: 'n8',
+      firstName: 'Hank',
+      lastName: 'Anderson',
+      role: 'Tech',
+      status: 'active',
+      employmentType: 'home',
+    },
+    n9: {
+      id: 'n9',
+      firstName: 'Ivy',
+      lastName: 'Thomas',
+      role: 'RN',
+      status: 'active',
+      employmentType: 'home',
+    },
+    n10: {
+      id: 'n10',
+      firstName: 'John',
+      lastName: 'Lee',
+      role: 'Other',
+      status: 'active',
+      employmentType: 'home',
+    },
   },
   scheduledShifts: [],
   ancillary: [],
@@ -132,8 +195,10 @@ const demoState: BoardState = {
   } as any,
   weather: { location: 'Jewish Hospital, Louisville' } as WeatherState,
   privacy: { mainBoardNameFormat: 'first-lastInitial' },
-  ui: { density: 'comfortable' }, // enriched below in the store init
   history: {},
+  ui: { density: 'comfortable' }, // enriched below in the store init
+
+  // Planner-related slices (keep if present in BoardState)
   coverage: [],
   assignments: [],
   planner: {
@@ -143,8 +208,9 @@ const demoState: BoardState = {
     selfScheduleOpen: false,
   },
   swapRequests: [],
+
   version: 3,
-};
+});
 
 export const useStore = create<Store>((set, get) => ({
   ...demoState,
@@ -307,9 +373,22 @@ export const useStore = create<Store>((set, get) => ({
     }),
 
   // Nurse menu actions
-  markOffAction: (nid) => set((state) => markOff(state, nid) as any),
+  markOffAction: (nid) =>
+    set((state) => {
+      const zone = state.zones.find((z) => z.nurseIds.includes(nid));
+      const nowIso = new Date().toISOString();
+      const entry: HistoryEntry = {
+        date: nowIso.slice(0, 10),
+        start: nowIso,
+        end: nowIso,
+        zoneId: zone?.id,
+        dto: true,
+      };
+      const after = markOff(state, nid) as any;
+      return pushHistory(after, nid, entry) as any;
+    }),
   setRfAction: (nid, rf) => set((state) => setRf(state, nid, rf) as any),
   setStudentTagAction: (nid, tag) => set((state) => setStudentTag(state, nid, tag) as any),
   setShiftEndAction: (nid, iso) => set((state) => setShiftEnd(state, nid, iso) as any),
-  setBreakAction: (nid, on, cover) => set((state) => setBreak(state, nid, on, cover) as any),
+  setBreakAction: (nid, on, coverId) => set((state) => setBreak(state, nid, on, coverId) as any),
 }));

@@ -15,6 +15,13 @@ npm run dev
 npm run build
 ```
 
+## Board layout & History
+
+- Zones render in a 3-row grid with Charge and Triage pinned to the top.
+- Nurse tiles show badges for break, student, and DTO states.
+- Employment type can be set for each nurse and appears on the board.
+- Nurse assignment history is tracked; Shift Builder shows the last five shifts.
+
 ## Weather
 
 Uses the [Open-Meteo](https://open-meteo.com/) API (no key) for live conditions. Defaults to **Jewish Hospital, Louisville** but can be customized in Settings.
@@ -27,8 +34,8 @@ Uses the [Open-Meteo](https://open-meteo.com/) API (no key) for live conditions.
 - Theme toggle (🌓) persists across sessions.
 - Search by name, RF number, role or notes from the top bar.
 - Search by name, Hospital ID, RF number, role or notes from the top bar.
-- Export/Import data via browser dev tools using localStorage key `staffboard_v2`.
-- If the app crashes, an overlay offers **Reload** or **Reset Local Data** (clears `staffboard_v2`).
+- Export/Import data via browser dev tools using localStorage key `staffboard_v3`.
+- If the app crashes, an overlay offers **Reload** or **Reset Local Data** (clears `staffboard_v3`).
 
 ## Hospital ID
 
