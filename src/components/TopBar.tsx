@@ -5,9 +5,11 @@ import { displayName } from '../utils/name';
 interface Props {
   onOpenSettings: () => void;
   onToggleTheme: () => void;
+  onToggleTvMode: () => void;
+  tvMode: boolean;
 }
 
-const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme }) => {
+const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode, tvMode }) => {
   const [query, setQuery] = useState('');
   const nurses = useStore((s) => Object.values(s.nurses));
   const results = query
@@ -19,16 +21,19 @@ const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme }) => {
     : [];
 
   return (
-    <header className="topbar">
-      <button onClick={onOpenSettings}>⚙️</button>
-      <input
-        className="search"
-        placeholder="Search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+    <header className={`topbar ${tvMode ? 'tv' : ''}`}>
+      {!tvMode && <button onClick={onOpenSettings}>⚙️</button>}
+      {!tvMode && (
+        <input
+          className="search"
+          placeholder="Search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      )}
       <button onClick={onToggleTheme}>🌓</button>
-      {query && (
+      <button onClick={onToggleTvMode}>{tvMode ? '↩️' : '📺'}</button>
+      {!tvMode && query && (
         <div className="search-results">
           {results.map((n) => (
             <div key={n.id}>{displayName(n, 'full')}</div>
