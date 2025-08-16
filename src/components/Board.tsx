@@ -7,6 +7,7 @@ import { useStore } from '../store';
 const Board: React.FC = () => {
   const zones = useStore((s) => [...s.zones].sort((a, b) => a.order - b.order));
   const moveNurse = useStore((s) => s.moveNurse);
+  const setUi = useStore((s) => s.setUi);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -19,12 +20,26 @@ const Board: React.FC = () => {
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={({ active }) => setUi({ draggingNurseId: active.id as string })}
+      onDragOver={({ over }) =>
+        setUi({ dragTargetZoneId: over?.data.current?.zoneId ?? null })
+      }
       onDragEnd={({ active, over }) => {
-        if (!over) return;
-        const toZone = over.data.current?.zoneId;
-        const index = over.data.current?.index;
-        if (toZone) moveNurse(active.id as string, toZone, index);
+        try {
+          setUi({ draggingNurseId: null, dragTargetZoneId: null });
+          if (!over) return;
+          const toZone = over.data.current?.zoneId;
+          const index = over.data.current?.index;
+          if (!toZone) {
+            console.warn('Invalid drop', { over });
+            return;
+          }
+          moveNurse(active.id as string, toZone, index);
+        } catch (e) {
+          console.error('[StaffBoard]', { phase: 'dragDrop', error: e });
+        }
       }}
+      onDragCancel={() => setUi({ draggingNurseId: null, dragTargetZoneId: null })}
     >
       <div className="board">
         {zones.map((z) => (

@@ -5,11 +5,15 @@ import { displayName } from '../utils/name';
 interface Props {
   onOpenSettings: () => void;
   onToggleTheme: () => void;
+  onToggleTvMode: () => void;
+  tvMode: boolean;
 }
 
-const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme }) => {
+const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode, tvMode }) => {
   const [query, setQuery] = useState('');
   const nurses = useStore((s) => Object.values(s.nurses));
+  const view = useStore((s) => s.ui.view);
+  const setView = useStore((s) => s.setUi);
   const results = query
     ? nurses.filter((n) =>
         [displayName(n, 'full'), n.rfNumber, n.role, n.notes]
@@ -19,16 +23,41 @@ const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme }) => {
     : [];
 
   return (
-    <header className="topbar">
-      <button onClick={onOpenSettings}>⚙️</button>
-      <input
-        className="search"
-        placeholder="Search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+    <header className={`topbar ${tvMode ? 'tv' : ''}`}>
+      {!tvMode && (
+        <nav className="nav-tabs">
+          <button
+            className={view === 'board' ? 'active' : ''}
+            onClick={() => setView({ view: 'board' })}
+          >
+            Board
+          </button>
+          <button
+            className={view === 'settings' ? 'active' : ''}
+            onClick={() => setView({ view: 'settings' })}
+          >
+            Settings
+          </button>
+          <button
+            className={view === 'shift' ? 'active' : ''}
+            onClick={() => setView({ view: 'shift' })}
+          >
+            Shift Builder
+          </button>
+        </nav>
+      )}
+      {!tvMode && <button onClick={onOpenSettings}>⚙️</button>}
+      {!tvMode && (
+        <input
+          className="search"
+          placeholder="Search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      )}
       <button onClick={onToggleTheme}>🌓</button>
-      {query && (
+      <button onClick={onToggleTvMode}>{tvMode ? '↩️' : '📺'}</button>
+      {!tvMode && query && (
         <div className="search-results">
           {results.map((n) => (
             <div key={n.id}>{displayName(n, 'full')}</div>
