@@ -133,7 +133,10 @@ const Settings: React.FC<Props> = ({ onClose }) => {
               value="open-meteo"
               checked={weatherDraft.provider === 'open-meteo'}
               onChange={(e) =>
-                setWeatherDraft({ ...weatherDraft, provider: e.target.value })
+                setWeatherDraft({
+                  ...weatherDraft,
+                  provider: e.target.value as 'open-meteo' | 'custom',
+                })
               }
             />{' '}
             Open-Meteo
@@ -144,7 +147,10 @@ const Settings: React.FC<Props> = ({ onClose }) => {
               value="custom"
               checked={weatherDraft.provider === 'custom'}
               onChange={(e) =>
-                setWeatherDraft({ ...weatherDraft, provider: e.target.value })
+                setWeatherDraft({
+                  ...weatherDraft,
+                  provider: e.target.value as 'open-meteo' | 'custom',
+                })
               }
             />{' '}
             Custom JSON URL

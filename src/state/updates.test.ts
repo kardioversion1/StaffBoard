@@ -27,25 +27,42 @@ const base: BoardState = {
   weather: { location: '' },
   privacy: { mainBoardNameFormat: 'first-lastInitial' },
   ui: { density: 'comfortable' },
+  history: {},
+  coverage: [],
+  assignments: [],
+  planner: { view: 'week', selectedDate: '', ruleConfig: {} },
+  swapRequests: [],
   version: 2,
 };
 
 describe('updates', () => {
   it('addStaff generates unique id', () => {
-    const { state, id } = addStaff(base, { firstName: 'A', lastName: 'B', role: 'RN' }, 'a');
+    const { state, id } = addStaff(
+      base,
+      { firstName: 'A', lastName: 'B', role: 'RN', status: 'active' },
+      'a'
+    );
     expect(id).toBeTruthy();
     expect(state.nurses[id]).toBeTruthy();
     expect(state.zones[0].nurseIds).toContain(id);
   });
 
   it('moveStaff no-ops on bad zone', () => {
-    const { state, id } = addStaff(base, { firstName: 'A', lastName: 'B', role: 'RN' }, 'a');
+    const { state, id } = addStaff(
+      base,
+      { firstName: 'A', lastName: 'B', role: 'RN', status: 'active' },
+      'a'
+    );
     const moved = moveStaff(state, id, 'missing');
     expect(moved).toEqual(state);
   });
 
   it('removeStaff cleans scheduled shifts', () => {
-    const { state, id } = addStaff(base, { firstName: 'A', lastName: 'B', role: 'RN' }, 'a');
+    const { state, id } = addStaff(
+      base,
+      { firstName: 'A', lastName: 'B', role: 'RN', status: 'active' },
+      'a'
+    );
     const withShift: BoardState = {
       ...state,
       scheduledShifts: [{ staffId: id, start: '1', end: '2' }],

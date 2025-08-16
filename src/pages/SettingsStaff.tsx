@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStore } from '../store';
 import { Nurse, Role, EmploymentType } from '../types';
 
@@ -16,6 +16,7 @@ const SettingsStaff: React.FC = () => {
   const [rf, setRf] = useState('');
   const [employment, setEmployment] = useState<EmploymentType>('home');
   const [query, setQuery] = useState('');
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const filtered = query
     ? nurses.filter((n) =>
@@ -24,6 +25,14 @@ const SettingsStaff: React.FC = () => {
         )
       )
     : nurses;
+
+  const selected = selectedId ? nurses.find((n) => n.id === selectedId) : null;
+
+  useEffect(() => {
+    if (query && filtered.length > 0) {
+      setSelectedId(filtered[0].id);
+    }
+  }, [query, filtered]);
 
   const onImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -68,91 +77,130 @@ const SettingsStaff: React.FC = () => {
   return (
     <div style={{ padding: 20 }}>
       <h2>Staff Manager</h2>
-      <div>
-        <input placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
-        <button onClick={onExport}>Export</button>
-        <input type="file" accept="application/json" onChange={onImport} />
+      <div className="staff-manager">
+        <div className="staff-list">
+          <div className="staff-actions">
+            <input
+              className="staff-search"
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button onClick={onExport}>Export</button>
+            <input type="file" accept="application/json" onChange={onImport} />
+          </div>
+          <table className="staff-table">
+            <thead>
+              <tr>
+                <th>First</th>
+                <th>Last</th>
+                <th>Role</th>
+                <th>RF #</th>
+                <th>Employment Type</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((n) => (
+                <tr
+                  key={n.id}
+                  className={selectedId === n.id ? 'selected' : ''}
+                  onClick={() => setSelectedId(n.id)}
+                >
+                  <td>
+                    <input value={n.firstName} onChange={(e) => update(n.id, { firstName: e.target.value })} />
+                  </td>
+                  <td>
+                    <input value={n.lastName} onChange={(e) => update(n.id, { lastName: e.target.value })} />
+                  </td>
+                  <td>
+                    <select value={n.role} onChange={(e) => update(n.id, { role: e.target.value as Role })}>
+                      {roles.map((r) => (
+                        <option key={r} value={r}>
+                          {r}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <input value={n.rfNumber || ''} onChange={(e) => update(n.id, { rfNumber: e.target.value })} />
+                  </td>
+                  <td>
+                    <select
+                      value={n.employmentType || 'home'}
+                      onChange={(e) => update(n.id, { employmentType: e.target.value as EmploymentType })}
+                    >
+                      {employmentTypes.map((t) => (
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <button onClick={() => remove(n.id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+              {!query && (
+                <tr>
+                  <td>
+                    <input value={first} onChange={(e) => setFirst(e.target.value)} placeholder="First" />
+                  </td>
+                  <td>
+                    <input value={last} onChange={(e) => setLast(e.target.value)} placeholder="Last" />
+                  </td>
+                  <td>
+                    <select value={role} onChange={(e) => setRole(e.target.value as Role)}>
+                      {roles.map((r) => (
+                        <option key={r} value={r}>
+                          {r}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <input value={rf} onChange={(e) => setRf(e.target.value)} placeholder="RF" />
+                  </td>
+                  <td>
+                    <select value={employment} onChange={(e) => setEmployment(e.target.value as EmploymentType)}>
+                      {employmentTypes.map((t) => (
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <button onClick={addNurse}>Add</button>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {selected && (
+          <div className="staff-details">
+            <h3>
+              {selected.firstName} {selected.lastName}
+            </h3>
+            <p>
+              <strong>Role:</strong> {selected.role}
+            </p>
+            <p>
+              <strong>RF #:</strong> {selected.rfNumber || '—'}
+            </p>
+            <p>
+              <strong>Employment:</strong> {selected.employmentType || 'home'}
+            </p>
+            {selected.notes && (
+              <p>
+                <strong>Notes:</strong> {selected.notes}
+              </p>
+            )}
+          </div>
+        )}
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>First</th>
-            <th>Last</th>
-            <th>Role</th>
-            <th>RF #</th>
-            <th>Employment Type</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.map((n) => (
-            <tr key={n.id}>
-              <td>
-                <input value={n.firstName} onChange={(e) => update(n.id, { firstName: e.target.value })} />
-              </td>
-              <td>
-                <input value={n.lastName} onChange={(e) => update(n.id, { lastName: e.target.value })} />
-              </td>
-              <td>
-                <select value={n.role} onChange={(e) => update(n.id, { role: e.target.value as Role })}>
-                  {roles.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <input value={n.rfNumber || ''} onChange={(e) => update(n.id, { rfNumber: e.target.value })} />
-              </td>
-              <td>
-                <select value={n.employmentType || 'home'} onChange={(e) => update(n.id, { employmentType: e.target.value as EmploymentType })}>
-                  {employmentTypes.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>
-                <button onClick={() => remove(n.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-          <tr>
-            <td>
-              <input value={first} onChange={(e) => setFirst(e.target.value)} placeholder="First" />
-            </td>
-            <td>
-              <input value={last} onChange={(e) => setLast(e.target.value)} placeholder="Last" />
-            </td>
-            <td>
-              <select value={role} onChange={(e) => setRole(e.target.value as Role)}>
-                {roles.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </td>
-            <td>
-              <input value={rf} onChange={(e) => setRf(e.target.value)} placeholder="RF" />
-            </td>
-            <td>
-              <select value={employment} onChange={(e) => setEmployment(e.target.value as EmploymentType)}>
-                {employmentTypes.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </td>
-            <td>
-              <button onClick={addNurse}>Add</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   );
 };

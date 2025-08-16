@@ -90,11 +90,6 @@ export interface SwapRequest {
   status: 'pending'|'approved'|'rejected'|'cancelled';
 }
 
-export interface HistoryEntry {
-  date: string;  start: string; end: string;
-  zoneId?: string; dto?: boolean;
-}
-
 export interface Zone {
   id: string;
   name: string;
@@ -156,7 +151,6 @@ export interface BoardState {
     dragTargetZoneId?: string | null;
     contextMenu?: { nurseId?: string; anchor?: DOMRect | null } | null;
   };
-  history: Record<string, HistoryEntry[]>;
   coverage: CoverageTarget[];
   assignments: Assignment[];
   planner: {
@@ -165,6 +159,6 @@ export interface BoardState {
     ruleConfig: RuleConfig;
     selfScheduleOpen?: boolean;
   };
-  swapRequests?: SwapRequest[];
+  swapRequests: SwapRequest[];
   version: number;
 }

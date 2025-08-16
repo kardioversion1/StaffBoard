@@ -19,12 +19,17 @@ const base: BoardState = {
   weather: { location: '' },
   privacy: { mainBoardNameFormat: 'first-lastInitial' },
   ui: { density: 'comfortable' },
+  history: {},
+  coverage: [],
+  assignments: [],
+  planner: { view: 'week', selectedDate: '', ruleConfig: {} },
+  swapRequests: [],
   version: 1,
 };
 
 describe('hospitalId', () => {
 beforeEach(() => {
-  useStore.setState((s) => ({ ...s, ...base }), true);
+  useStore.setState((s) => ({ ...s, ...base }) as any, true);
 });
 
   it('auto assigns unique hospital id', () => {
