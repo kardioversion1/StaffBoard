@@ -39,6 +39,14 @@ const NurseCard: React.FC<Props> = ({ nurse, zoneId, index }) => {
       ref={setNodeRef}
       style={style}
       className={`nurse-card ${isDragging ? 'dragging' : ''}`}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        useStore.getState().setUi({ contextMenu: { nurseId: nurse.id, anchor: e.currentTarget.getBoundingClientRect() } });
+      }}
+      onClick={(e) => {
+        if (e.altKey) return; // allow alt+click for other features
+        useStore.getState().setUi({ contextMenu: { nurseId: nurse.id, anchor: e.currentTarget.getBoundingClientRect() } });
+      }}
       {...attributes}
       {...listeners}
     >

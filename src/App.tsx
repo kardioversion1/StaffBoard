@@ -7,9 +7,14 @@ import ViewportScaler from './components/ViewportScaler';
 import { useStore } from './store';
 import { safeLoad, safeSave } from './lib/storage';
 
+import NurseMenu from './components/NurseMenu';
+import SettingsStaff from './pages/SettingsStaff';
+import ShiftBuilder from './pages/ShiftBuilder';
+
 const App: React.FC = () => {
   const settings = useStore((s) => s.settings);
   const updateSettings = useStore((s) => s.updateSettings);
+  const view = useStore((s) => s.ui.view);
 
   const [showSettings, setShowSettings] = useState(false);
   const [showDev, setShowDev] = useState(false);
@@ -23,29 +28,37 @@ const App: React.FC = () => {
     document.documentElement.dataset.theme = settings.theme;
   }, [settings.theme]);
 
-  // Initial load from localStorage (safe)
+  // Initial load from localStorage (safe) and normalize transient UI
   useEffect(() => {
-    try {
-      const persisted = safeLoad();
-      if (persisted?.board) {
-        useStore.setState(persisted.board);
-        lastSave.current = persisted.updatedAt ?? null;
-      }
-    } catch (e) {
-      console.warn('[StaffBoard] safeLoad failed', e);
+    const persisted = safeLoad();
+    if (persisted?.board) {
+      useStore.setState({
+        ...persisted.board,
+        ui: {
+          ...persisted.board.ui,
+          // ensure runtime-only fields start clean
+          view: 'board',
+          draggingNurseId: null,
+          dragTargetZoneId: null,
+          contextMenu: null,
+        },
+      });
+      lastSave.current = persisted.updatedAt ?? null;
     }
   }, []);
 
-  // Debounced persistence on store changes
+  // Debounced persistence on store changes (exclude transient UI)
   useEffect(() => {
     const unsub = useStore.subscribe((state) => {
       if (pending.current) window.clearTimeout(pending.current);
       pending.current = window.setTimeout(() => {
         pending.current = null;
 
+        // Persist only durable UI pieces (e.g., density). Avoid saving view/drag state.
+        const { ui, ...rest } = state as any;
         const payload = {
           version: state.version,
-          board: state,
+          board: { ...rest, ui: { density: ui?.density ?? 'comfortable' } },
           updatedAt: new Date().toISOString(),
         };
 
@@ -87,12 +100,19 @@ const App: React.FC = () => {
           }
         />
 
-        <div className="main-grid">
-          <Board />
-          <RightRail />
-        </div>
+        {view === 'board' && (
+          <div className="main-grid">
+            <Board />
+            <RightRail />
+          </div>
+        )}
+        {view === 'settings' && <SettingsStaff />}
+        {view === 'shift' && <ShiftBuilder />}
 
         {showSettings && <Settings onClose={() => setShowSettings(false)} />}
+
+        {/* Global nurse context menu (portal/overlay) */}
+        <NurseMenu />
 
         {saveError && <div className="toast">{saveError}</div>}
 
@@ -111,3 +131,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

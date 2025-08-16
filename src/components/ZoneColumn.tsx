@@ -10,9 +10,10 @@ interface Props { zone: Zone }
 const ZoneColumn: React.FC<Props> = ({ zone }) => {
   const { setNodeRef } = useDroppable({ id: zone.id, data: { zoneId: zone.id } });
   const nurses = useStore((s) => zone.nurseIds.map((id) => s.nurses[id]).filter(Boolean));
+  const dragTarget = useStore((s) => s.ui.dragTargetZoneId);
 
   return (
-    <div className="zone" ref={setNodeRef}>
+    <div className={`zone ${dragTarget === zone.id ? 'zone--dropTarget' : ''}`} ref={setNodeRef}>
       <h3 className="zone-title">{zone.name}</h3>
       <SortableContext items={zone.nurseIds} strategy={verticalListSortingStrategy}>
         {nurses.map((nurse, index) => (

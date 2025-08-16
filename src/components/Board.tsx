@@ -1,5 +1,12 @@
 import React from 'react';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import ZoneColumn from './ZoneColumn';
 import { useStore } from '../store';
@@ -7,23 +14,29 @@ import { useStore } from '../store';
 const Board: React.FC = () => {
   const zones = useStore((s) => [...s.zones].sort((a, b) => a.order - b.order));
   const moveNurse = useStore((s) => s.moveNurse);
+  const setUi = useStore((s) => s.setUi);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={({ active }) => setUi({ draggingNurseId: active.id as string })}
+      onDragOver={({ over }) =>
+        setUi({ dragTargetZoneId: (over?.data.current as any)?.zoneId ?? null })
+      }
       onDragEnd={({ active, over }) => {
         try {
+          setUi({ draggingNurseId: null, dragTargetZoneId: null });
           if (!over) return;
-          const toZone = over.data.current?.zoneId;
-          const index = over.data.current?.index;
+
+          const toZone = (over.data.current as any)?.zoneId as string | undefined;
+          const index = (over.data.current as any)?.index as number | undefined;
+
           if (!toZone) {
             console.warn('Invalid drop', { over });
             return;
@@ -33,6 +46,7 @@ const Board: React.FC = () => {
           console.error('[StaffBoard]', { phase: 'dragDrop', error: e });
         }
       }}
+      onDragCancel={() => setUi({ draggingNurseId: null, dragTargetZoneId: null })}
     >
       <div className="board">
         {zones.map((z) => (
@@ -44,3 +58,4 @@ const Board: React.FC = () => {
 };
 
 export default Board;
+
