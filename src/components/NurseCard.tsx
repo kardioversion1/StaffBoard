@@ -50,7 +50,31 @@ const NurseCard: React.FC<Props> = ({ nurse, zoneId, index }) => {
       {...attributes}
       {...listeners}
     >
-      <div className="nurse-name">{displayName(nurse, privacy)}</div>
+      <div className="nurse-name">
+        <span className="employment-icon" title={nurse.employmentType || 'home'}>
+          {nurse.employmentType === 'float'
+            ? '↔️'
+            : nurse.employmentType === 'travel'
+            ? '✈️'
+            : nurse.employmentType === 'other'
+            ? '•'
+            : '🏠'}
+        </span>
+        {displayName(nurse, privacy)}
+        <span className="badges">
+          {(nurse.notes || '').includes('[BREAK') && (
+            <span className="badge badge--break" title="On break">☕</span>
+          )}
+          {nurse.studentTag && (
+            <span className="badge badge--student" title={`Student ${nurse.studentTag}`}>
+              🎓
+            </span>
+          )}
+          {nurse.status === 'off' && (
+            <span className="badge badge--dto" title="DTO'd">⛔</span>
+          )}
+        </span>
+      </div>
       {shouldShowOffAt(nurse.offAt) && (
         <span className="off-tag">Off at {offAtLabel(nurse.offAt)}</span>
       )}

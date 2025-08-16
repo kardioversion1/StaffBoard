@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
-import { Nurse, Role } from '../types';
+import { Nurse, Role, EmploymentType } from '../types';
 
 const roles: Role[] = ['RN','Charge RN','Tech','MD','APP','RT','Rad','Transport','Scribe','Other'];
+const employmentTypes: EmploymentType[] = ['home', 'float', 'travel', 'other'];
 
 const SettingsStaff: React.FC = () => {
   const nurses = useStore((s) => Object.values(s.nurses));
@@ -13,11 +14,12 @@ const SettingsStaff: React.FC = () => {
   const [last, setLast] = useState('');
   const [role, setRole] = useState<Role>('RN');
   const [rf, setRf] = useState('');
+  const [employment, setEmployment] = useState<EmploymentType>('home');
   const [query, setQuery] = useState('');
 
   const filtered = query
     ? nurses.filter((n) =>
-        [n.firstName, n.lastName, n.rfNumber, n.role].some((f) =>
+        [n.firstName, n.lastName, n.rfNumber, n.role, n.employmentType].some((f) =>
           f?.toLowerCase().includes(query.toLowerCase())
         )
       )
@@ -56,10 +58,11 @@ const SettingsStaff: React.FC = () => {
   };
 
   const addNurse = () => {
-    add({ firstName: first, lastName: last, role, rfNumber: rf, status: 'active' });
+    add({ firstName: first, lastName: last, role, rfNumber: rf, status: 'active', employmentType: employment });
     setFirst('');
     setLast('');
     setRf('');
+    setEmployment('home');
   };
 
   return (
@@ -77,6 +80,7 @@ const SettingsStaff: React.FC = () => {
             <th>Last</th>
             <th>Role</th>
             <th>RF #</th>
+            <th>Employment Type</th>
             <th></th>
           </tr>
         </thead>
@@ -102,6 +106,15 @@ const SettingsStaff: React.FC = () => {
                 <input value={n.rfNumber || ''} onChange={(e) => update(n.id, { rfNumber: e.target.value })} />
               </td>
               <td>
+                <select value={n.employmentType || 'home'} onChange={(e) => update(n.id, { employmentType: e.target.value as EmploymentType })}>
+                  {employmentTypes.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </td>
+              <td>
                 <button onClick={() => remove(n.id)}>Delete</button>
               </td>
             </tr>
@@ -124,6 +137,15 @@ const SettingsStaff: React.FC = () => {
             </td>
             <td>
               <input value={rf} onChange={(e) => setRf(e.target.value)} placeholder="RF" />
+            </td>
+            <td>
+              <select value={employment} onChange={(e) => setEmployment(e.target.value as EmploymentType)}>
+                {employmentTypes.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
             </td>
             <td>
               <button onClick={addNurse}>Add</button>

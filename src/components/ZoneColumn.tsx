@@ -15,11 +15,13 @@ const ZoneColumn: React.FC<Props> = ({ zone }) => {
   return (
     <div className={`zone ${dragTarget === zone.id ? 'zone--dropTarget' : ''}`} ref={setNodeRef}>
       <h3 className="zone-title">{zone.name}</h3>
-      <SortableContext items={zone.nurseIds} strategy={verticalListSortingStrategy}>
-        {nurses.map((nurse, index) => (
-          <NurseCard key={nurse.id} nurse={nurse} index={index} zoneId={zone.id} />
-        ))}
-      </SortableContext>
+      <div className="zone-body">
+        <SortableContext items={zone.nurseIds} strategy={verticalListSortingStrategy}>
+          {nurses.map((nurse, index) => (
+            <NurseCard key={nurse.id} nurse={nurse} index={index} zoneId={zone.id} />
+          ))}
+        </SortableContext>
+      </div>
     </div>
   );
 };
