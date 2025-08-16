@@ -15,6 +15,15 @@ body{background:var(--bg);color:var(--text);font-family:sans-serif;font-size:var
 .right-rail{display:flex;flex-direction:column;gap:var(--gap);padding:var(--gap);overflow:hidden;}
 .rail-card{background:var(--panel);padding:var(--gap);border-radius:var(--radius);min-height:100px;}
 .time-weather .clock{font-size:var(--f-xl);line-height:1;}
+.time-weather .weather{margin-top:8px;}
+.time-weather .loc{font-size:var(--f);}
+.time-weather .current{display:flex;align-items:center;gap:8px;font-size:var(--f-lg);}
+.time-weather .current .icon{font-size:var(--f-lg);}
+.time-weather .range,.time-weather .updated{font-size:var(--f);color:var(--muted);}
+.time-weather .updated .stale{color:var(--warn);}
+.time-weather .weather-placeholder{margin-top:8px;font-size:var(--f);color:var(--muted);}
+.time-weather .weather-placeholder button{margin-left:8px;}
+.error{color:var(--danger);font-size:var(--f);margin-top:4px;}
 .topbar.tv .search{display:none;}
 .topbar.tv button:first-child{display:none;}
 

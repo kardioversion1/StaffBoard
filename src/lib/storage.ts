@@ -8,7 +8,7 @@ export type PersistedState = {
   updatedAt: string;
 };
 
-const CURRENT_VERSION = 1;
+const CURRENT_VERSION = 2;
 
 function isValid(obj: any): obj is PersistedState {
   return obj && typeof obj === 'object' && typeof obj.version === 'number' && obj.board;
@@ -51,7 +51,21 @@ export function safeSave(state: PersistedState): boolean {
 
 function migrate(old: PersistedState): PersistedState | null {
   try {
-    // no migrations yet
+    if (old.version === 1) {
+      const board = { ...old.board, version: 2 } as BoardState;
+      const s: any = board.settings || {};
+      if (typeof s.weatherEnabled === 'undefined') {
+        s.weatherEnabled = false;
+      } else {
+        if (!s.weatherProvider) s.weatherProvider = s.weatherEndpoint ? 'custom' : 'open-meteo';
+        if (!s.weatherLocationLabel) s.weatherLocationLabel = 'Jewish Hospital, Louisville';
+        if (s.weatherLat === undefined) s.weatherLat = 38.2473;
+        if (s.weatherLon === undefined) s.weatherLon = -85.7579;
+        if (s.weatherRefreshMinutes === undefined) s.weatherRefreshMinutes = 10;
+      }
+      board.settings = s;
+      return { version: CURRENT_VERSION, board, updatedAt: old.updatedAt };
+    }
     return { ...old, version: CURRENT_VERSION };
   } catch {
     return null;

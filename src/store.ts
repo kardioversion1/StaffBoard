@@ -35,14 +35,21 @@ const demoState: BoardState = {
     tvMode: false,
     showSeconds: true,
     clock24h: false,
-    weatherEnabled: false,
+    weatherEnabled: true,
+    weatherProvider: 'open-meteo',
+    weatherLocationLabel: 'Jewish Hospital, Louisville',
+    weatherLat: 38.2473,
+    weatherLon: -85.7579,
+    weatherRefreshMinutes: 10,
     autoPromoteIncoming: false,
     retainOffgoingMinutes: 30,
   },
-  weather: { location: '' } as WeatherState,
+  weather: {
+    location: 'Jewish Hospital, Louisville',
+  } as WeatherState,
   privacy: { mainBoardNameFormat: 'first-lastInitial' },
   ui: { density: 'comfortable' },
-  version: 1,
+  version: 2,
 };
 
 interface Store extends BoardState {

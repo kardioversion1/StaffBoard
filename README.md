@@ -15,6 +15,10 @@ npm run dev
 npm run build
 ```
 
+## Weather
+
+Uses the [Open-Meteo](https://open-meteo.com/) API (no key) for live conditions. Defaults to **Jewish Hospital, Louisville** but can be customized in Settings.
+
 ## Admin Tips
 
 - Use the ⚙️ button to manage staff and zones.

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useStore } from '../../store';
 import { useWeather } from '../../hooks/useWeather';
+import { conditionIcon } from '../../lib/weather';
 
 const pad = (n: number) => n.toString().padStart(2, '0');
 
 const CardTimeWeather: React.FC = () => {
   const settings = useStore((s) => s.settings);
+  const updateSettings = useStore((s) => s.updateSettings);
   const weather = useWeather();
   const [now, setNow] = useState(new Date());
 
@@ -29,6 +31,12 @@ const CardTimeWeather: React.FC = () => {
     day: 'numeric',
   });
 
+  const updated = weather.updatedAt ? new Date(weather.updatedAt) : null;
+  const stale = updated ? Date.now() - updated.getTime() > 60 * 60 * 1000 : false;
+  const updatedStr = updated
+    ? updated.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+    : null;
+
   return (
     <div className="rail-card time-weather">
       <div className="clock">{timeStr}</div>
@@ -36,16 +44,33 @@ const CardTimeWeather: React.FC = () => {
       {settings.weatherEnabled ? (
         weather && weather.tempF !== undefined ? (
           <div className="weather">
-            <div className="loc">
-              {settings.weatherLocationLabel || weather.location}
+            <div className="loc">{weather.location}</div>
+            <div className="current">
+              <span className="icon">{conditionIcon(weather.condition)}</span>
+              <span className="temp">{Math.round(weather.tempF)}&deg;F</span>
+              <span className="cond">{weather.condition}</span>
             </div>
-            <div className="temp">{weather.tempF}&deg;F</div>
+            {weather.highF !== undefined && weather.lowF !== undefined && (
+              <div className="range">
+                H {Math.round(weather.highF)}&deg; / L {Math.round(weather.lowF)}&deg;
+              </div>
+            )}
+            {updatedStr && (
+              <div className="updated">
+                Updated {updatedStr} {stale && <span className="stale">(stale)</span>}
+              </div>
+            )}
           </div>
         ) : (
-          <div className="weather-placeholder">No weather source configured</div>
+          <div className="weather-placeholder">No weather data yet</div>
         )
       ) : (
-        <div className="weather-placeholder">Weather disabled</div>
+        <div className="weather-placeholder">
+          Weather disabled –{' '}
+          <button onClick={() => updateSettings({ weatherEnabled: true })}>
+            Enable Weather
+          </button>
+        </div>
       )}
     </div>
   );
