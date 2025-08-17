@@ -4,13 +4,12 @@ import { displayName } from '../utils/name';
 import { searchNurses } from '../utils/search';
 
 interface Props {
-  onOpenSettings: () => void;
   onToggleTheme: () => void;
   onToggleTvMode: () => void;
   tvMode: boolean;
 }
 
-const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode, tvMode }) => {
+const TopBar: React.FC<Props> = ({ onToggleTheme, onToggleTvMode, tvMode }) => {
   const [query, setQuery] = useState('');
   const nurses = useStore((s) => Object.values(s.nurses));
   const view = useStore((s) => s.ui.view);
@@ -48,8 +47,6 @@ const TopBar: React.FC<Props> = ({ onOpenSettings, onToggleTheme, onToggleTvMode
           </button>
         </nav>
       )}
-
-      {!tvMode && <button onClick={onOpenSettings}>⚙️</button>}
 
       {!tvMode && (
         <input

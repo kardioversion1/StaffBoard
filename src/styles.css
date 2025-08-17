@@ -65,3 +65,25 @@ body{background:var(--bg);color:var(--text);font-family:sans-serif;font-size:var
 .nurse-menu{background:var(--panel);box-shadow:0 2px 6px rgba(0,0,0,0.4);display:flex;flex-direction:column;gap:4px;}
 .nurse-menu button{background:none;border:none;color:var(--text);text-align:left;padding:4px 8px;cursor:pointer;}
 .nurse-menu button:hover{background:var(--control);}
+.staff-manager{display:flex;gap:var(--gap);align-items:flex-start;}
+.staff-list{flex:1;}
+.staff-actions{margin-bottom:10px;display:flex;gap:10px;align-items:center;}
+.staff-actions .staff-search{flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--control);color:var(--text);}
+.staff-table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:var(--radius);overflow:hidden;}
+.staff-table th,.staff-table td{padding:8px;border-bottom:1px solid var(--line);}
+.staff-table th{background:var(--control);text-align:left;}
+.staff-table tr:nth-child(even){background:var(--control);}
+.staff-table tr.selected{background:color-mix(in oklab,var(--accent) 30%, var(--control));}
+.staff-table tr:hover{background:color-mix(in oklab,var(--accent) 15%, var(--control));}
+.staff-details{width:260px;background:var(--panel);padding:var(--gap);border-radius:var(--radius);}
+.staff-details h3{margin-top:0;}
+
+.settings-page{display:flex;flex-direction:column;gap:var(--gap);padding:var(--gap);}
+.settings-section{background:var(--panel);padding:var(--gap);border-radius:var(--radius);}
+.settings-section h2{margin-top:0;}
+.zones-list{margin:0 0 10px 20px;padding:0;}
+.zones-actions{display:flex;gap:8px;}
+.zones-actions input{flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--control);color:var(--text);}
+.weather-grid{display:flex;flex-direction:column;gap:8px;margin-top:8px;max-width:300px;}
+.weather-grid input{padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--control);color:var(--text);}
+.weather-grid label{display:flex;align-items:center;gap:4px;}

@@ -1,14 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Board from './components/Board';
 import TopBar from './components/TopBar';
-import Settings from './components/Settings';
 import RightRail from './components/RightRail';
 import ViewportScaler from './components/ViewportScaler';
 import { useStore } from './store';
 import { safeLoad, safeSave } from './lib/storage';
 
 import NurseMenu from './components/NurseMenu';
-import SettingsStaff from './pages/SettingsStaff';
+import Settings from './pages/Settings';
 import ShiftBuilder from './pages/ShiftBuilder';
 import ShiftPlanner from './pages/ShiftPlanner';
 
@@ -17,7 +16,6 @@ const App: React.FC = () => {
   const updateSettings = useStore((s) => s.updateSettings);
   const view = useStore((s) => s.ui.view);
 
-  const [showSettings, setShowSettings] = useState(false);
   const [showDev, setShowDev] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -93,7 +91,6 @@ const App: React.FC = () => {
         <TopBar
           tvMode={settings.tvMode}
           onToggleTvMode={() => updateSettings({ tvMode: !settings.tvMode })}
-          onOpenSettings={() => setShowSettings(true)}
           onToggleTheme={() =>
             updateSettings({
               theme: settings.theme === 'dark' ? 'light' : 'dark',
@@ -107,11 +104,9 @@ const App: React.FC = () => {
             <RightRail />
           </div>
         )}
-        {view === 'settings' && <SettingsStaff />}
+        {view === 'settings' && <Settings />}
         {view === 'planner' && <ShiftPlanner />}
         {view === 'shift' && <ShiftBuilder />}
-
-        {showSettings && <Settings onClose={() => setShowSettings(false)} />}
 
         {/* Global nurse context menu (portal/overlay) */}
         <NurseMenu />
